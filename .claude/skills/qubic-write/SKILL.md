@@ -1,0 +1,40 @@
+---
+name: qubic-write
+description: Write to Qubic memory - store decisions, preferences, todos, and facts
+---
+
+# Qubic Write
+
+Store information in Qubic memory. Use MCP tools from `qubicdb` server.
+
+## Basic Write (project-wide, no thread)
+
+```
+mcp0_qubicdb_write(index_id: "brain-PROJECT_NAME", content: "CONTENT_HERE")
+```
+
+## With Metadata (conversation-scoped)
+
+```
+mcp0_qubicdb_write(index_id: "brain-PROJECT_NAME", content: "CONTENT_HERE", metadata: "{\"type\": \"TYPE\", \"thread_id\": \"THREAD_ID\"}")
+```
+
+## Common Types
+
+| Type | When to use |
+|------|-------------|
+| `preference` | User preferences (usually no thread_id) |
+| `decision` | Architecture/design decisions |
+| `todo` | Tasks (add `status: pending/done`) |
+| `pattern` | Code patterns (usually no thread_id) |
+| `fact` | General facts |
+| `summary` | Session/conversation summaries |
+
+## Persona Responses
+
+| Type | Response |
+|------|----------|
+| Preference | `✨ Qubic will remember this.` |
+| Decision | `🧠 Qubic saved as decision.` |
+| Todo | `📝 Qubic added to todos.` |
+| General | `✨ Qubic saved.` |
