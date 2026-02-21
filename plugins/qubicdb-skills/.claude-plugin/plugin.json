@@ -1,0 +1,11 @@
+{
+  "name": "qubicdb-skills",
+  "description": "Core QubicDB memory skills for Claude Code. Persistent brain-like organic memory via MCP — write, search, recall, and context assembly.",
+  "version": "1.0.0",
+  "author": {
+    "name": "QubicDB",
+    "homepage": "https://github.com/qubicDB"
+  },
+  "repository": "https://github.com/qubicDB/skills",
+  "license": "MIT"
+}

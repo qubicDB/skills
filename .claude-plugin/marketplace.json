@@ -1,0 +1,39 @@
+{
+  "name": "qubicdb-agent-skills",
+  "owner": {
+    "name": "QubicDB",
+    "email": "denizumutdereli@gmail.com"
+  },
+  "metadata": {
+    "description": "Agent Skills for QubicDB — brain-like organic memory for AI agents and IDE assistants.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "qubicdb-skills",
+      "source": "./plugins/qubicdb-skills",
+      "description": "Core QubicDB memory skills — write, search, recall, and context assembly via MCP.",
+      "version": "1.0.0",
+      "author": {
+        "name": "QubicDB"
+      },
+      "license": "MIT",
+      "keywords": ["memory", "brain", "mcp", "qubicdb", "organic-memory"],
+      "category": "memory",
+      "tags": ["memory", "mcp", "persistent-memory"]
+    },
+    {
+      "name": "qubicdb-experimental",
+      "source": "./plugins/qubicdb-experimental",
+      "description": "Experimental QubicDB skills — multi-index research, agent-to-agent memory, sentiment journal, REST API knowledge base, and more.",
+      "version": "0.1.0",
+      "author": {
+        "name": "QubicDB"
+      },
+      "license": "MIT",
+      "keywords": ["memory", "experimental", "multi-agent", "sentiment", "rag", "knowledge-base"],
+      "category": "memory",
+      "tags": ["experimental", "advanced", "multi-agent"]
+    }
+  ]
+}

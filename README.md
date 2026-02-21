@@ -1,8 +1,8 @@
-# QubicDB Skills & MCP Integration
+# QubicDB Agent Skills
 
-AI IDE skills, rules, and workflows for [QubicDB](https://github.com/qubicDB/qubicdb) — a brain-like memory system for LLM applications.
+Brain-like organic memory for AI agents and IDE assistants — powered by [QubicDB](https://github.com/qubicDB/qubicdb).
 
-Includes ready-to-use configurations for **Windsurf**, **Cursor**, **VS Code (GitHub Copilot)**, and **Claude Code**.
+Includes ready-to-use configurations for **Windsurf**, **Cursor**, **VS Code (GitHub Copilot)**, and **Claude Code**. Also available as a **Claude Code Plugin** via marketplace.
 
 ---
 
@@ -54,13 +54,20 @@ Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
 
 > **Note:** The `QUBICDB_MCP_API_KEY` must match the `X-API-Key` header in your IDE's MCP config. Change both if you use a custom key.
 
-### 2. Add MCP to your IDE
+### 2. Install skills
 
-Pick your IDE below, copy the relevant folder into your project root.
+**Option A: Claude Code Plugin (recommended for Claude Code)**
 
-### 3. Copy skills into your project
+```bash
+/plugin marketplace add qubicDB/skills
+/plugin install qubicdb-skills@qubicdb-agent-skills
+```
 
-Copy the relevant folder(s) for your IDE into your project root and start a conversation — the AI will use QubicDB as persistent memory automatically.
+**Option B: Copy IDE folder** — pick your IDE below, copy the relevant folder into your project root.
+
+### 3. Start using
+
+Start a conversation — the AI will use QubicDB as persistent memory automatically.
 
 ---
 
@@ -185,6 +192,63 @@ QubicDB gives your AI assistant a persistent, organic memory across conversation
 - **Hebbian learning** — memories that fire together, wire together
 - **Spreading activation search** — finds related memories through synapse connections
 - **Lifecycle states** — Active → Idle → Sleeping → Dormant with automatic consolidation
+
+---
+
+## Claude Code Plugin (Marketplace)
+
+This repo is a **Claude Code Plugin Marketplace**. Install directly:
+
+```bash
+# Add the marketplace
+/plugin marketplace add qubicDB/skills
+
+# Install core skills (MCP memory: write, search, recall, context)
+/plugin install qubicdb-skills@qubicdb-agent-skills
+
+# Install experimental skills (multi-index, agent-to-agent, sentiment, REST API, RAG)
+/plugin install qubicdb-experimental@qubicdb-agent-skills
+```
+
+Plugin structure:
+
+```
+plugins/
+├── qubicdb-skills/              ← core plugin
+│   ├── .claude-plugin/plugin.json
+│   ├── .mcp.json                ← auto-configures MCP server
+│   └── skills/
+│       ├── qubic/SKILL.md
+│       ├── qubic-init/SKILL.md
+│       ├── qubic-search/SKILL.md
+│       └── qubic-write/SKILL.md
+└── qubicdb-experimental/        ← experimental plugin
+    ├── .claude-plugin/plugin.json
+    └── skills/
+        ├── multi-index-research/SKILL.md
+        ├── agent-to-agent/SKILL.md
+        ├── conversation-chains/SKILL.md
+        ├── sentiment-journal/SKILL.md
+        ├── knowledge-base-server/SKILL.md
+        └── rag-context-assembly/SKILL.md
+```
+
+---
+
+## Experimental Skills
+
+The `qubicdb-experimental` plugin showcases diverse use cases beyond IDE memory:
+
+| Skill | Description |
+|-------|-------------|
+| **multi-index-research** | Separate brains per research domain, cross-reference between them |
+| **agent-to-agent** | Multiple agents sharing memory through a common brain with role metadata |
+| **conversation-chains** | Track multi-session conversations with thread_id chaining and parent links |
+| **sentiment-journal** | Emotion-aware journaling leveraging built-in VADER sentiment analysis |
+| **knowledge-base** | Build a persistent knowledge base with rich metadata and hybrid search |
+| **rag-context-assembly** | Token-budgeted context assembly using spreading activation (not just vector similarity) |
+
+> Each skill includes full Prerequisites with Docker setup and MCP config for all 4 IDEs.
 
 ---
 
