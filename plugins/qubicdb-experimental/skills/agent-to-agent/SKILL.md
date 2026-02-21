@@ -1,5 +1,5 @@
 ---
-name: qubicdb-agent-to-agent
+name: agent-to-agent
 description: Share memory between multiple AI agents through a common QubicDB index. Agents write findings with role metadata and read each other's discoveries via search.
 ---
 
@@ -109,7 +109,7 @@ Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
 
 ### 3. Verify MCP connection
 
-Run `qubicdb_registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
+Run `qubicdb:registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
 
 ## Concept
 
@@ -130,26 +130,26 @@ Agent A (Researcher)     Agent B (Analyst)      Agent C (Writer)
 
 ```
 # Agent A (Researcher) stores findings
-qubicdb_write(index_id: "brain-project-alpha", content: "Found dataset of 10k user interactions from Q3 2025 in S3 bucket.", metadata: "{\"role\": \"researcher\", \"agent_id\": \"agent-a\", \"type\": \"finding\"}")
+qubicdb:write(index_id: "brain-project-alpha", content: "Found dataset of 10k user interactions from Q3 2025 in S3 bucket.", metadata: "{\"role\": \"researcher\", \"agent_id\": \"agent-a\", \"type\": \"finding\"}")
 
 # Agent B (Analyst) stores analysis
-qubicdb_write(index_id: "brain-project-alpha", content: "User engagement drops 40% after day 7. Retention cliff correlates with feature discovery rate.", metadata: "{\"role\": \"analyst\", \"agent_id\": \"agent-b\", \"type\": \"analysis\"}")
+qubicdb:write(index_id: "brain-project-alpha", content: "User engagement drops 40% after day 7. Retention cliff correlates with feature discovery rate.", metadata: "{\"role\": \"analyst\", \"agent_id\": \"agent-b\", \"type\": \"analysis\"}")
 
 # Agent C (Writer) stores drafts
-qubicdb_write(index_id: "brain-project-alpha", content: "Executive summary: User retention analysis reveals a critical day-7 engagement cliff linked to feature discovery.", metadata: "{\"role\": \"writer\", \"agent_id\": \"agent-c\", \"type\": \"draft\"}")
+qubicdb:write(index_id: "brain-project-alpha", content: "Executive summary: User retention analysis reveals a critical day-7 engagement cliff linked to feature discovery.", metadata: "{\"role\": \"writer\", \"agent_id\": \"agent-c\", \"type\": \"draft\"}")
 ```
 
 ## Reading Other Agents' Work
 
 ```
 # Analyst reads researcher's findings
-qubicdb_search(index_id: "brain-project-alpha", query: "dataset user interactions", metadata: "{\"role\": \"researcher\"}", strict: true)
+qubicdb:search(index_id: "brain-project-alpha", query: "dataset user interactions", metadata: "{\"role\": \"researcher\"}", strict: true)
 
 # Writer reads analyst's conclusions
-qubicdb_search(index_id: "brain-project-alpha", query: "engagement retention analysis", metadata: "{\"role\": \"analyst\"}", strict: true)
+qubicdb:search(index_id: "brain-project-alpha", query: "engagement retention analysis", metadata: "{\"role\": \"analyst\"}", strict: true)
 
 # Any agent gets full project context
-qubicdb_context(index_id: "brain-project-alpha", cue: "project findings and analysis", max_tokens: 2000)
+qubicdb:context(index_id: "brain-project-alpha", cue: "project findings and analysis", max_tokens: 2000)
 ```
 
 ## Use Cases

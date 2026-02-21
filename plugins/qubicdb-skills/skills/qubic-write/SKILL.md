@@ -109,18 +109,18 @@ Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
 
 ### 3. Verify MCP connection
 
-Run `qubicdb_registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
+Run `qubicdb:registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
 
 ## Basic Write (project-wide, no thread)
 
 ```
-mcp0_qubicdb_write(index_id: "brain-PROJECT_NAME", content: "CONTENT_HERE")
+qubicdb:write(index_id: "brain-PROJECT_NAME", content: "CONTENT_HERE")
 ```
 
 ## With Metadata (conversation-scoped)
 
 ```
-mcp0_qubicdb_write(index_id: "brain-PROJECT_NAME", content: "CONTENT_HERE", metadata: "{\"type\": \"TYPE\", \"thread_id\": \"THREAD_ID\"}")
+qubicdb:write(index_id: "brain-PROJECT_NAME", content: "CONTENT_HERE", metadata: "{\"type\": \"TYPE\", \"thread_id\": \"THREAD_ID\"}")
 ```
 
 ## Common Types

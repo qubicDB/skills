@@ -129,7 +129,7 @@ Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
 
 ### 3. Verify MCP connection
 
-Run `qubicdb_registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
+Run `qubicdb:registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
 
 ## Architecture
 
@@ -161,48 +161,48 @@ QubicDB MCP server provides these tools:
 
 | Tool | Purpose |
 |------|---------|
-| `mcp0_qubicdb_registry_find_or_create` | Find or create project index |
-| `mcp0_qubicdb_write` | Write a neuron |
-| `mcp0_qubicdb_search` | Spreading activation search |
-| `mcp0_qubicdb_context` | Token-budgeted context assembly |
-| `mcp0_qubicdb_read` | Read a single neuron |
-| `mcp0_qubicdb_recall` | List recent neurons |
+| `qubicdb:registry_find_or_create` | Find or create project index |
+| `qubicdb:write` | Write a neuron |
+| `qubicdb:search` | Spreading activation search |
+| `qubicdb:context` | Token-budgeted context assembly |
+| `qubicdb:read` | Read a single neuron |
+| `qubicdb:recall` | List recent neurons |
 
 ### Session Start
 
 ```
 # Find or create the project index (once per project)
-mcp0_qubicdb_registry_find_or_create(uuid: "brain-{project}")
+qubicdb:registry_find_or_create(uuid: "brain-{project}")
 
 # Load existing knowledge
-mcp0_qubicdb_search(index_id: "brain-{project}", query: "preferences decisions context", depth: 2, limit: 25)
+qubicdb:search(index_id: "brain-{project}", query: "preferences decisions context", depth: 2, limit: 25)
 ```
 
 ### Writing
 
 ```
 # Preference (no thread — applies project-wide)
-mcp0_qubicdb_write(index_id: "brain-{project}", content: "User prefers Yarn over npm")
+qubicdb:write(index_id: "brain-{project}", content: "User prefers Yarn over npm")
 
 # Decision (with thread — belongs to this conversation)
-mcp0_qubicdb_write(index_id: "brain-{project}", content: "Use PostgreSQL for this project", metadata: "{\"type\": \"decision\", \"thread_id\": \"conv-abc123\"}")
+qubicdb:write(index_id: "brain-{project}", content: "Use PostgreSQL for this project", metadata: "{\"type\": \"decision\", \"thread_id\": \"conv-abc123\"}")
 ```
 
 ### Searching
 
 ```
 # General search (entire project)
-mcp0_qubicdb_search(index_id: "brain-{project}", query: "database decision", depth: 2, limit: 15)
+qubicdb:search(index_id: "brain-{project}", query: "database decision", depth: 2, limit: 15)
 
 # Find decisions from this conversation only
-mcp0_qubicdb_search(index_id: "brain-{project}", query: "decisions", metadata: "{\"thread_id\": \"conv-abc123\"}", strict: true)
+qubicdb:search(index_id: "brain-{project}", query: "decisions", metadata: "{\"thread_id\": \"conv-abc123\"}", strict: true)
 ```
 
 ### Context Assembly
 
 ```
 # Token-budgeted context for complex tasks
-mcp0_qubicdb_context(index_id: "brain-{project}", cue: "project decisions and preferences", max_tokens: 1500)
+qubicdb:context(index_id: "brain-{project}", cue: "project decisions and preferences", max_tokens: 1500)
 ```
 
 ## Metadata Types
@@ -224,7 +224,7 @@ It's cheap and free - just ask! and you'll get the answer in a flash.
 
 ```
 # Auto-activate relevant neurons
-mcp0_qubicdb_search(index_id: "brain-{project}", query: "relevant context", depth: 2, limit: 10)
+qubicdb:search(index_id: "brain-{project}", query: "relevant context", depth: 2, limit: 10)
 ```
 
 ### IMPORTANT: 

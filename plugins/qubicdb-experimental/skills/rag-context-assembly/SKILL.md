@@ -1,11 +1,11 @@
 ---
-name: qubicdb-rag-context-assembly
+name: rag-context-assembly
 description: Use QubicDB's token-budgeted context assembly for RAG (Retrieval Augmented Generation). Unlike traditional RAG, QubicDB uses spreading activation to find associatively related memories, not just vector-similar chunks.
 ---
 
 # RAG Context Assembly
 
-QubicDB's `/v1/context` endpoint (MCP: `qubicdb_context`) provides **token-budgeted context assembly** using spreading activation — a fundamentally different approach from traditional vector-only RAG.
+QubicDB's `/v1/context` endpoint (MCP: `qubicdb:context`) provides **token-budgeted context assembly** using spreading activation — a fundamentally different approach from traditional vector-only RAG.
 
 ## Prerequisites
 
@@ -109,7 +109,7 @@ Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
 
 ### 3. Verify MCP connection
 
-Run `qubicdb_registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
+Run `qubicdb:registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
 
 ## How It Differs from Traditional RAG
 
@@ -126,10 +126,10 @@ Run `qubicdb_registry_find_or_create(uuid: "test")` — if it returns a result, 
 
 ```
 # Basic context assembly
-qubicdb_context(index_id: "brain-myproject", cue: "How should we handle authentication?", max_tokens: 1500)
+qubicdb:context(index_id: "brain-myproject", cue: "How should we handle authentication?", max_tokens: 1500)
 
 # Deep search context (more associative hops)
-qubicdb_context(index_id: "brain-myproject", cue: "security best practices for our API", depth: 4, max_tokens: 2000)
+qubicdb:context(index_id: "brain-myproject", cue: "security best practices for our API", depth: 4, max_tokens: 2000)
 ```
 
 ## Building a RAG Pipeline
@@ -138,18 +138,18 @@ qubicdb_context(index_id: "brain-myproject", cue: "security best practices for o
 
 ```
 # Store project decisions
-qubicdb_write(index_id: "brain-myproject", content: "We use JWT tokens for API authentication with 1-hour expiry. Refresh tokens stored in httpOnly cookies.", metadata: "{\"type\": \"decision\"}")
+qubicdb:write(index_id: "brain-myproject", content: "We use JWT tokens for API authentication with 1-hour expiry. Refresh tokens stored in httpOnly cookies.", metadata: "{\"type\": \"decision\"}")
 
-qubicdb_write(index_id: "brain-myproject", content: "All API endpoints require Bearer token except /health and /auth/login. Rate limiting is 100 req/min per user.", metadata: "{\"type\": \"decision\"}")
+qubicdb:write(index_id: "brain-myproject", content: "All API endpoints require Bearer token except /health and /auth/login. Rate limiting is 100 req/min per user.", metadata: "{\"type\": \"decision\"}")
 
-qubicdb_write(index_id: "brain-myproject", content: "User passwords are hashed with bcrypt (cost 12). We use argon2id for API key derivation.", metadata: "{\"type\": \"decision\"}")
+qubicdb:write(index_id: "brain-myproject", content: "User passwords are hashed with bcrypt (cost 12). We use argon2id for API key derivation.", metadata: "{\"type\": \"decision\"}")
 ```
 
 ### Step 2: Assemble Context for LLM Prompt
 
 ```
 # When user asks: "How do we handle auth?"
-context = qubicdb_context(index_id: "brain-myproject", cue: "authentication and security", max_tokens: 1500)
+context = qubicdb:context(index_id: "brain-myproject", cue: "authentication and security", max_tokens: 1500)
 
 # The assembled context includes all related decisions —
 # even ones not directly about "auth" but connected via synapses

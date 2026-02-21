@@ -109,18 +109,18 @@ Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
 
 ### 3. Verify MCP connection
 
-Run `qubicdb_registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
+Run `qubicdb:registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
 
 ## Basic Search
 
 ```
-mcp0_qubicdb_search(index_id: "brain-PROJECT_NAME", query: "SEARCH_QUERY", depth: 2, limit: 15)
+qubicdb:search(index_id: "brain-PROJECT_NAME", query: "SEARCH_QUERY", depth: 2, limit: 15)
 ```
 
 ## With Metadata Filter
 
 ```
-mcp0_qubicdb_search(index_id: "brain-PROJECT_NAME", query: "SEARCH_QUERY", metadata: "{\"type\": \"decision\"}", strict: true)
+qubicdb:search(index_id: "brain-PROJECT_NAME", query: "SEARCH_QUERY", metadata: "{\"type\": \"decision\"}", strict: true)
 ```
 
 ## Persona Responses

@@ -1,11 +1,11 @@
 {
   "name": "qubicdb-experimental",
-  "description": "Experimental QubicDB skills showcasing advanced use cases — multi-index research, agent-to-agent memory, sentiment analysis, REST API knowledge bases, and RAG context assembly.",
+  "description": "Experimental QubicDB skills showcasing advanced use cases — multi-index research, agent-to-agent memory, sentiment analysis, knowledge bases, and RAG context assembly.",
   "version": "0.1.0",
   "author": {
-    "name": "QubicDB",
-    "homepage": "https://github.com/qubicDB"
+    "name": "QubicDB"
   },
+  "homepage": "https://github.com/qubicDB",
   "repository": "https://github.com/qubicDB/skills",
   "license": "MIT"
 }

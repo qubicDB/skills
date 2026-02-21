@@ -1,5 +1,5 @@
 ---
-name: qubicdb-multi-index-research
+name: multi-index-research
 description: Use multiple QubicDB indexes as isolated knowledge domains. Create separate brains for different research topics, then cross-reference between them for interdisciplinary insights.
 ---
 
@@ -109,7 +109,7 @@ Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
 
 ### 3. Verify MCP connection
 
-Run `qubicdb_registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
+Run `qubicdb:registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
 
 ## Concept
 
@@ -128,31 +128,31 @@ Cross-reference: "How does Hebbian learning relate to transformer attention?"
 
 ```
 # Create isolated indexes for each domain
-qubicdb_registry_find_or_create(uuid: "brain-neuroscience")
-qubicdb_registry_find_or_create(uuid: "brain-ai-ml")
-qubicdb_registry_find_or_create(uuid: "brain-philosophy")
+qubicdb:registry_find_or_create(uuid: "brain-neuroscience")
+qubicdb:registry_find_or_create(uuid: "brain-ai-ml")
+qubicdb:registry_find_or_create(uuid: "brain-philosophy")
 ```
 
 ## Writing to Different Domains
 
 ```
 # Store neuroscience knowledge
-qubicdb_write(index_id: "brain-neuroscience", content: "Hebbian learning: neurons that fire together wire together. Synaptic strength increases with co-activation.", metadata: "{\"type\": \"concept\", \"source\": \"Hebb 1949\"}")
+qubicdb:write(index_id: "brain-neuroscience", content: "Hebbian learning: neurons that fire together wire together. Synaptic strength increases with co-activation.", metadata: "{\"type\": \"concept\", \"source\": \"Hebb 1949\"}")
 
 # Store ML knowledge
-qubicdb_write(index_id: "brain-ai-ml", content: "Transformer attention mechanism computes weighted relationships between all token pairs in a sequence.", metadata: "{\"type\": \"concept\", \"source\": \"Vaswani et al. 2017\"}")
+qubicdb:write(index_id: "brain-ai-ml", content: "Transformer attention mechanism computes weighted relationships between all token pairs in a sequence.", metadata: "{\"type\": \"concept\", \"source\": \"Vaswani et al. 2017\"}")
 ```
 
 ## Cross-Domain Search
 
 ```
 # Search across domains for interdisciplinary connections
-qubicdb_search(index_id: "brain-neuroscience", query: "associative learning synaptic plasticity", depth: 3, limit: 10)
-qubicdb_search(index_id: "brain-ai-ml", query: "attention mechanism associative", depth: 3, limit: 10)
+qubicdb:search(index_id: "brain-neuroscience", query: "associative learning synaptic plasticity", depth: 3, limit: 10)
+qubicdb:search(index_id: "brain-ai-ml", query: "attention mechanism associative", depth: 3, limit: 10)
 
 # Use context assembly for synthesis
-qubicdb_context(index_id: "brain-neuroscience", cue: "biological learning mechanisms", max_tokens: 1000)
-qubicdb_context(index_id: "brain-ai-ml", cue: "learning mechanisms in neural networks", max_tokens: 1000)
+qubicdb:context(index_id: "brain-neuroscience", cue: "biological learning mechanisms", max_tokens: 1000)
+qubicdb:context(index_id: "brain-ai-ml", cue: "learning mechanisms in neural networks", max_tokens: 1000)
 ```
 
 ## Use Cases

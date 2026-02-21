@@ -1,5 +1,5 @@
 ---
-name: qubicdb-conversation-chains
+name: conversation-chains
 description: Track long multi-session conversations using thread_id chaining. Resume context across sessions, link related conversations, and build conversation trees.
 ---
 
@@ -109,7 +109,7 @@ Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
 
 ### 3. Verify MCP connection
 
-Run `qubicdb_registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
+Run `qubicdb:registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
 
 ## Concept
 
@@ -125,36 +125,36 @@ Session 1 (conv-001)          Session 2 (conv-002)          Session 3 (conv-003)
 
 ```
 # Session 1: Start a new chain
-qubicdb_write(index_id: "brain-myproject", content: "Session started: Setting up PostgreSQL database for the project.", metadata: "{\"type\": \"session-start\", \"thread_id\": \"conv-001\"}")
+qubicdb:write(index_id: "brain-myproject", content: "Session started: Setting up PostgreSQL database for the project.", metadata: "{\"type\": \"session-start\", \"thread_id\": \"conv-001\"}")
 
 # Store decisions during the session
-qubicdb_write(index_id: "brain-myproject", content: "Decided to use PostgreSQL 16 with pgvector extension for future vector search needs.", metadata: "{\"type\": \"decision\", \"thread_id\": \"conv-001\"}")
+qubicdb:write(index_id: "brain-myproject", content: "Decided to use PostgreSQL 16 with pgvector extension for future vector search needs.", metadata: "{\"type\": \"decision\", \"thread_id\": \"conv-001\"}")
 
 # End session with summary
-qubicdb_write(index_id: "brain-myproject", content: "Session summary: Set up PostgreSQL 16, created users table, added pgvector extension, configured connection pooling.", metadata: "{\"type\": \"summary\", \"thread_id\": \"conv-001\"}")
+qubicdb:write(index_id: "brain-myproject", content: "Session summary: Set up PostgreSQL 16, created users table, added pgvector extension, configured connection pooling.", metadata: "{\"type\": \"summary\", \"thread_id\": \"conv-001\"}")
 ```
 
 ## Resuming in a New Session
 
 ```
 # Session 2: Load previous context
-qubicdb_search(index_id: "brain-myproject", query: "PostgreSQL setup decisions", metadata: "{\"thread_id\": \"conv-001\"}", strict: true)
+qubicdb:search(index_id: "brain-myproject", query: "PostgreSQL setup decisions", metadata: "{\"thread_id\": \"conv-001\"}", strict: true)
 
 # Link to parent conversation
-qubicdb_write(index_id: "brain-myproject", content: "Session started: Adding user authentication. Continuing from conv-001 (PostgreSQL setup).", metadata: "{\"type\": \"session-start\", \"thread_id\": \"conv-002\", \"parent_thread\": \"conv-001\"}")
+qubicdb:write(index_id: "brain-myproject", content: "Session started: Adding user authentication. Continuing from conv-001 (PostgreSQL setup).", metadata: "{\"type\": \"session-start\", \"thread_id\": \"conv-002\", \"parent_thread\": \"conv-001\"}")
 ```
 
 ## Finding Related Conversations
 
 ```
 # Find all sessions about a topic (soft search across all threads)
-qubicdb_search(index_id: "brain-myproject", query: "PostgreSQL database configuration", depth: 3, limit: 20)
+qubicdb:search(index_id: "brain-myproject", query: "PostgreSQL database configuration", depth: 3, limit: 20)
 
 # Find all session summaries
-qubicdb_search(index_id: "brain-myproject", query: "session summary", metadata: "{\"type\": \"summary\"}", strict: true)
+qubicdb:search(index_id: "brain-myproject", query: "session summary", metadata: "{\"type\": \"summary\"}", strict: true)
 
 # Build full context from conversation chain
-qubicdb_context(index_id: "brain-myproject", cue: "authentication and database decisions across all sessions", max_tokens: 2000)
+qubicdb:context(index_id: "brain-myproject", cue: "authentication and database decisions across all sessions", max_tokens: 2000)
 ```
 
 ## Use Cases

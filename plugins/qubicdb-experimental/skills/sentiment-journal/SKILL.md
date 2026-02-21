@@ -1,5 +1,5 @@
 ---
-name: qubicdb-sentiment-journal
+name: sentiment-journal
 description: Emotion-aware journaling and note-taking using QubicDB's built-in VADER sentiment analysis. Memories are automatically tagged with emotion labels and search results are boosted by sentiment match.
 ---
 
@@ -109,7 +109,7 @@ Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
 
 ### 3. Verify MCP connection
 
-Run `qubicdb_registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
+Run `qubicdb:registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
 
 ## How It Works
 
@@ -131,26 +131,26 @@ Search: "What problems did we encounter?"
 
 ```
 # Positive entry — auto-labeled as happiness
-qubicdb_write(index_id: "brain-daily-journal", content: "Amazing progress today! Finished the entire API layer and all tests pass. Team morale is high.", metadata: "{\"type\": \"journal\", \"date\": \"2025-02-21\"}")
+qubicdb:write(index_id: "brain-daily-journal", content: "Amazing progress today! Finished the entire API layer and all tests pass. Team morale is high.", metadata: "{\"type\": \"journal\", \"date\": \"2025-02-21\"}")
 
 # Negative entry — auto-labeled as frustration/anger
-qubicdb_write(index_id: "brain-daily-journal", content: "Spent 4 hours debugging a race condition in the worker pool. Extremely frustrating. The mutex logic needs a complete rethink.", metadata: "{\"type\": \"journal\", \"date\": \"2025-02-21\"}")
+qubicdb:write(index_id: "brain-daily-journal", content: "Spent 4 hours debugging a race condition in the worker pool. Extremely frustrating. The mutex logic needs a complete rethink.", metadata: "{\"type\": \"journal\", \"date\": \"2025-02-21\"}")
 
 # Neutral entry — auto-labeled as neutral
-qubicdb_write(index_id: "brain-daily-journal", content: "Reviewed the architecture docs. The system has 6 main components: API, Worker Pool, Matrix Engine, Persistence, Daemons, and Registry.", metadata: "{\"type\": \"journal\", \"date\": \"2025-02-21\"}")
+qubicdb:write(index_id: "brain-daily-journal", content: "Reviewed the architecture docs. The system has 6 main components: API, Worker Pool, Matrix Engine, Persistence, Daemons, and Registry.", metadata: "{\"type\": \"journal\", \"date\": \"2025-02-21\"}")
 ```
 
 ## Sentiment-Aware Search
 
 ```
 # "What went well?" → naturally boosts positive memories
-qubicdb_search(index_id: "brain-daily-journal", query: "great progress achievements success", depth: 2, limit: 10)
+qubicdb:search(index_id: "brain-daily-journal", query: "great progress achievements success", depth: 2, limit: 10)
 
 # "What frustrated me?" → naturally boosts negative memories
-qubicdb_search(index_id: "brain-daily-journal", query: "frustrating problems bugs issues", depth: 2, limit: 10)
+qubicdb:search(index_id: "brain-daily-journal", query: "frustrating problems bugs issues", depth: 2, limit: 10)
 
 # "What did I learn?" → neutral/analytical
-qubicdb_search(index_id: "brain-daily-journal", query: "learned insights understanding", depth: 2, limit: 10)
+qubicdb:search(index_id: "brain-daily-journal", query: "learned insights understanding", depth: 2, limit: 10)
 ```
 
 ## Use Cases

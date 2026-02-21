@@ -25,7 +25,7 @@
     {
       "name": "qubicdb-experimental",
       "source": "./plugins/qubicdb-experimental",
-      "description": "Experimental QubicDB skills — multi-index research, agent-to-agent memory, sentiment journal, REST API knowledge base, and more.",
+      "description": "Experimental QubicDB skills — multi-index research, agent-to-agent memory, sentiment journal, knowledge base, and RAG context assembly.",
       "version": "0.1.0",
       "author": {
         "name": "QubicDB"

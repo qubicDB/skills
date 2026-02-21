@@ -109,18 +109,18 @@ Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
 
 ### 3. Verify MCP connection
 
-Run `qubicdb_registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
+Run `qubicdb:registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
 
 ## Steps
 
 1. Register project index: (or you can use the existing one - or even create thread id if needed)
 ```
-mcp0_qubicdb_registry_find_or_create(uuid: "brain-PROJECT_NAME")
+qubicdb:registry_find_or_create(uuid: "brain-PROJECT_NAME")
 ```
 
 2. Load existing knowledge: (you can change the parameters or query preferences as you like)
 ```
-mcp0_qubicdb_search(index_id: "brain-PROJECT_NAME", query: "preferences decisions context patterns", depth: 2, limit: 25)
+qubicdb:search(index_id: "brain-PROJECT_NAME", query: "preferences decisions context patterns", depth: 2, limit: 25)
 ```
 
 3. Respond with persona:

@@ -1,5 +1,5 @@
 ---
-name: qubicdb-knowledge-base
+name: knowledge-base-server
 description: Build a persistent knowledge base using QubicDB via MCP. Store documents with rich metadata, search with hybrid vector + lexical scoring, and assemble token-budgeted context for LLM prompts.
 ---
 
@@ -109,47 +109,47 @@ Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
 
 ### 3. Verify MCP connection
 
-Run `qubicdb_registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
+Run `qubicdb:registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
 
 ## Setup
 
 ```
 # Create the knowledge base index
-qubicdb_registry_find_or_create(uuid: "kb-product-docs")
+qubicdb:registry_find_or_create(uuid: "kb-product-docs")
 ```
 
 ## Storing Documents
 
 ```
 # Store with rich metadata
-qubicdb_write(index_id: "kb-product-docs", content: "QubicDB supports hybrid search combining GGUF vector embeddings with lexical BM25-style scoring. The alpha parameter (0.0-1.0) controls the weight: 0.0 = pure lexical, 1.0 = pure semantic.", metadata: "{\"source\": \"docs/search.md\", \"category\": \"search\", \"version\": \"1.0.0\"}")
+qubicdb:write(index_id: "kb-product-docs", content: "QubicDB supports hybrid search combining GGUF vector embeddings with lexical BM25-style scoring. The alpha parameter (0.0-1.0) controls the weight: 0.0 = pure lexical, 1.0 = pure semantic.", metadata: "{\"source\": \"docs/search.md\", \"category\": \"search\", \"version\": \"1.0.0\"}")
 
 # Store another document
-qubicdb_write(index_id: "kb-product-docs", content: "Neurons in QubicDB have lifecycle states: Active, Idle, Sleeping, Dormant. Inactive neurons decay over time through background daemons, simulating biological memory forgetting.", metadata: "{\"source\": \"docs/lifecycle.md\", \"category\": \"architecture\"}")
+qubicdb:write(index_id: "kb-product-docs", content: "Neurons in QubicDB have lifecycle states: Active, Idle, Sleeping, Dormant. Inactive neurons decay over time through background daemons, simulating biological memory forgetting.", metadata: "{\"source\": \"docs/lifecycle.md\", \"category\": \"architecture\"}")
 ```
 
 ## Search (Hybrid: Vector + Lexical + Spreading Activation)
 
 ```
 # Basic search
-qubicdb_search(index_id: "kb-product-docs", query: "how does search scoring work", depth: 2, limit: 10)
+qubicdb:search(index_id: "kb-product-docs", query: "how does search scoring work", depth: 2, limit: 10)
 
 # Search filtered by metadata
-qubicdb_search(index_id: "kb-product-docs", query: "vector embedding", metadata: "{\"category\": \"search\"}", strict: true)
+qubicdb:search(index_id: "kb-product-docs", query: "vector embedding", metadata: "{\"category\": \"search\"}", strict: true)
 ```
 
 ## Context Assembly
 
 ```
 # Build token-budgeted context for LLM consumption
-qubicdb_context(index_id: "kb-product-docs", cue: "How does QubicDB handle memory decay and lifecycle management?", max_tokens: 1500)
+qubicdb:context(index_id: "kb-product-docs", cue: "How does QubicDB handle memory decay and lifecycle management?", max_tokens: 1500)
 ```
 
 ## Recent Documents
 
 ```
 # List recent memories
-qubicdb_recall(index_id: "kb-product-docs", limit: 20)
+qubicdb:recall(index_id: "kb-product-docs", limit: 20)
 ```
 
 ## Use Cases
