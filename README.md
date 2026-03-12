@@ -36,6 +36,8 @@ docker compose -f docker-compose.qubicdb.vector.yml up -d --build
 
 **Important:** Download the GGUF model first. Full download commands are documented in [SETUP.md](./SETUP.md).
 
+Helper instructions and local patch scripts are also available in [`qubicdb/patches`](https://github.com/qubicDB/qubicdb/tree/main/patches).
+
 **Option C: Docker Run (non-vector)**
 
 ```bash

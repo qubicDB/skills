@@ -160,8 +160,14 @@ Add to your IDE's MCP settings:
 
 > ⚠️ The official `qubicdb/qubicdb:latest` image does **not** include vector support (no llama.cpp).
 
-Use `docker-compose.qubicdb.vector.yml` when you want semantic/vector search.
+If you want helper instructions and patch scripts for local vector enablement, see `qubicdb/patches/` in the main repo:
 
+- `patches/windows-local-vector/`
+- `patches/linux-local-vector/`
+- `patches/macos-local-vector/`
+- `patches/vector-wrapper/`
+
+Use `docker-compose.qubicdb.vector.yml` when you want semantic/vector search.
 
 ### Vector prerequisites
 
