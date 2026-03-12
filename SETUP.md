@@ -92,6 +92,8 @@ Visualize how the brain thinks and how neurons form connections.
 
 ### MCP Configuration
 
+For IDE-specific installation steps and which folders/files to copy for Windsurf, Cursor, VS Code, and Claude Code, see [README.md](./README.md).
+
 Add to your IDE's MCP settings:
 
 **Windsurf:**
@@ -160,12 +162,12 @@ Add to your IDE's MCP settings:
 
 > ⚠️ The official `qubicdb/qubicdb:latest` image does **not** include vector support (no llama.cpp).
 
-If you want helper instructions and patch scripts for local vector enablement, see `qubicdb/patches/` in the main repo:
+If you want helper instructions and patch scripts for local vector enablement, see these directories in the main `qubicdb` repo:
 
-- `patches/windows-local-vector/`
-- `patches/linux-local-vector/`
-- `patches/macos-local-vector/`
-- `patches/vector-wrapper/`
+- [patches/windows-local-vector](https://github.com/qubicDB/qubicdb/tree/main/patches/windows-local-vector)
+- [patches/linux-local-vector](https://github.com/qubicDB/qubicdb/tree/main/patches/linux-local-vector)
+- [patches/macos-local-vector](https://github.com/qubicDB/qubicdb/tree/main/patches/macos-local-vector)
+- [patches/vector-wrapper](https://github.com/qubicDB/qubicdb/tree/main/patches/vector-wrapper)
 
 Use `docker-compose.qubicdb.vector.yml` when you want semantic/vector search.
 
