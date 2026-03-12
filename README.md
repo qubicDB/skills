@@ -34,7 +34,7 @@ docker run -d \
   -e QUBICDB_MCP_RATE_LIMIT_RPS=30 \
   -e QUBICDB_MCP_RATE_LIMIT_BURST=60 \
   -e QUBICDB_MCP_ENABLE_PROMPTS=true \
-  -e QUBICDB_MCP_API_KEY=vaipn-mcp-key-2024 \
+  -e QUBICDB_MCP_API_KEY=qubicdb-mcp-secret-key \
   qubicdb/qubicdb:latest
 
 docker run -d \
@@ -97,7 +97,7 @@ MCP config for Windsurf settings:
     "qubicdb": {
       "serverUrl": "http://localhost:6060/mcp",
       "headers": {
-        "X-API-Key": "vaipn-mcp-key-2024"
+        "X-API-Key": "qubicdb-mcp-secret-key"
       }
     }
   }

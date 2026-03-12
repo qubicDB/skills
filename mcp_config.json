@@ -3,7 +3,7 @@
     "qubicdb": {
       "serverUrl": "http://localhost:6060/mcp",
       "headers": {
-        "X-API-Key": "vaipn-mcp-key-2024"
+        "X-API-Key": "qubicdb-mcp-secret-key"
       }
     }
   }

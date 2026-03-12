@@ -55,7 +55,7 @@ docker run -d \
   -e QUBICDB_MCP_RATE_LIMIT_RPS=30 \
   -e QUBICDB_MCP_RATE_LIMIT_BURST=60 \
   -e QUBICDB_MCP_ENABLE_PROMPTS=true \
-  -e QUBICDB_MCP_API_KEY=vaipn-mcp-key-2024 \
+  -e QUBICDB_MCP_API_KEY=qubicdb-mcp-secret-key \
   qubicdb/qubicdb:latest
 
 docker run -d \
@@ -84,7 +84,7 @@ Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
     "qubicdb": {
       "type": "url",
       "url": "http://localhost:6060/mcp",
-      "headers": { "X-API-Key": "vaipn-mcp-key-2024" }
+      "headers": { "X-API-Key": "qubicdb-mcp-secret-key" }
     }
   }
 }
@@ -96,7 +96,7 @@ Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
   "mcpServers": {
     "qubicdb": {
       "url": "http://localhost:6060/mcp",
-      "headers": { "X-API-Key": "vaipn-mcp-key-2024" }
+      "headers": { "X-API-Key": "qubicdb-mcp-secret-key" }
     }
   }
 }
@@ -109,7 +109,7 @@ Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
     "qubicdb": {
       "type": "http",
       "url": "http://localhost:6060/mcp",
-      "headers": { "X-API-Key": "vaipn-mcp-key-2024" }
+      "headers": { "X-API-Key": "qubicdb-mcp-secret-key" }
     }
   }
 }
@@ -121,7 +121,7 @@ Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
   "mcpServers": {
     "qubicdb": {
       "serverUrl": "http://localhost:6060/mcp",
-      "headers": { "X-API-Key": "vaipn-mcp-key-2024" }
+      "headers": { "X-API-Key": "qubicdb-mcp-secret-key" }
     }
   }
 }
