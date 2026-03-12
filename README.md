@@ -8,15 +8,35 @@ Includes ready-to-use configurations for **Windsurf**, **Cursor**, **VS Code (Gi
 
 ## Quick Start
 
-### 1. Pull and run QubicDB
+### 1. Start QubicDB
 
-**Option A: Docker Compose (Recommended)**
+**Option A: Non-vector Docker Compose**
 
 ```bash
 docker compose -f docker-compose.qubicdb.yml up -d
 ```
 
-**Option B: Docker Run**
+**Option B: Vector Docker Compose**
+
+Clone `qubicdb` and `skills` side-by-side:
+
+```text
+your-folder/
+├── qubicdb/
+└── skills/
+```
+
+Then run:
+
+```bash
+docker compose -f docker-compose.qubicdb.vector.yml up -d --build
+```
+
+`docker-compose.qubicdb.vector.yml` expects the vector model at `../qubicdb/dist/MiniLM-L6-v2.Q8_0.gguf`.
+
+**Important:** Download the GGUF model first. Full download commands are documented in [SETUP.md](./SETUP.md).
+
+**Option C: Docker Run (non-vector)**
 
 ```bash
 docker pull qubicdb/qubicdb:latest
@@ -29,11 +49,20 @@ docker run -d \
   --network qubicdb-net \
   -p 6060:6060 \
   -v qubicdb_data:/app/data \
+  -e QUBICDB_HTTP_ADDR=:6060 \
+  -e QUBICDB_DATA_PATH=/app/data \
   -e QUBICDB_ADMIN_ENABLED=true \
   -e QUBICDB_ADMIN_USER=admin \
   -e QUBICDB_ADMIN_PASSWORD=changeme \
   -e QUBICDB_MCP_ENABLED=true \
+  -e QUBICDB_MCP_PATH=/mcp \
+  -e QUBICDB_MCP_STATELESS=true \
+  -e QUBICDB_MCP_RATE_LIMIT_RPS=30 \
+  -e QUBICDB_MCP_RATE_LIMIT_BURST=60 \
+  -e QUBICDB_MCP_ENABLE_PROMPTS=true \
   -e QUBICDB_MCP_API_KEY=qubicdb-mcp-secret-key \
+  -e QUBICDB_ALLOWED_ORIGINS=http://localhost:6060,http://localhost:8080,http://127.0.0.1:8080 \
+  -e QUBICDB_REGISTRY_ENABLED=false \
   qubicdb/qubicdb:latest
 
 docker run -d \
@@ -43,7 +72,7 @@ docker run -d \
   qubicdb/qubicdb-ui:latest
 ```
 
-> 📖 For detailed setup instructions, vector support, and troubleshooting, see [SETUP.md](./SETUP.md).
+> 📖 For full non-vector setup, vector setup, vector parameters, and troubleshooting, see [SETUP.md](./SETUP.md).
 
 Verify:
 
