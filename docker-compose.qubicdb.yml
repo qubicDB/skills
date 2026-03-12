@@ -8,7 +8,7 @@ services:
       - "6060:6060"
     volumes:
       - qubicdb_data:/app/data
-      - /Users/kubra/code/denizumutdereli/vectori/qubicdb/qubicdb/dist:/app/dist:ro
+      - qubicdb/dist:/app/dist:ro
     environment:
       - QUBICDB_HTTP_ADDR=:6060
       - QUBICDB_DATA_PATH=/app/data
