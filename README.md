@@ -10,6 +10,14 @@ Includes ready-to-use configurations for **Windsurf**, **Cursor**, **VS Code (Gi
 
 ### 1. Pull and run QubicDB
 
+**Option A: Docker Compose (Recommended)**
+
+```bash
+docker compose -f docker-compose.qubicdb.yml up -d
+```
+
+**Option B: Docker Run**
+
 ```bash
 docker pull qubicdb/qubicdb:latest
 docker pull qubicdb/qubicdb-ui:latest
@@ -21,19 +29,10 @@ docker run -d \
   --network qubicdb-net \
   -p 6060:6060 \
   -v qubicdb_data:/app/data \
-  -e QUBICDB_HTTP_ADDR=:6060 \
-  -e QUBICDB_DATA_PATH=/app/data \
   -e QUBICDB_ADMIN_ENABLED=true \
   -e QUBICDB_ADMIN_USER=admin \
   -e QUBICDB_ADMIN_PASSWORD=changeme \
-  -e QUBICDB_ALLOWED_ORIGINS=http://localhost:8080 \
-  -e QUBICDB_REGISTRY_ENABLED=false \
   -e QUBICDB_MCP_ENABLED=true \
-  -e QUBICDB_MCP_PATH=/mcp \
-  -e QUBICDB_MCP_STATELESS=true \
-  -e QUBICDB_MCP_RATE_LIMIT_RPS=30 \
-  -e QUBICDB_MCP_RATE_LIMIT_BURST=60 \
-  -e QUBICDB_MCP_ENABLE_PROMPTS=true \
   -e QUBICDB_MCP_API_KEY=qubicdb-mcp-secret-key \
   qubicdb/qubicdb:latest
 
@@ -43,6 +42,8 @@ docker run -d \
   -p 8080:80 \
   qubicdb/qubicdb-ui:latest
 ```
+
+> 📖 For detailed setup instructions, vector support, and troubleshooting, see [SETUP.md](./SETUP.md).
 
 Verify:
 
