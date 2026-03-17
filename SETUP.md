@@ -158,6 +158,51 @@ Add to your IDE's MCP settings:
 
 ---
 
+## Bundled Vector Setup
+
+`qubicdb/qubicdb-bundled:latest` is a separate Docker Hub image that includes the example MIT-licensed `MiniLM-L6-v2.Q8_0.gguf` embedding model bundled inside the image (about 25 MB).
+
+Use this lane when you want vector search without a local build and without mounting `../qubicdb/dist`.
+
+### Start with bundled vector compose
+
+```bash
+docker compose -f docker-compose.qubicdb.bundled.yml up -d
+```
+
+### Docker Run (Bundled Vector)
+
+```bash
+docker run -d \
+  --name qubicdb \
+  --network qubicdb-net \
+  -p 6060:6060 \
+  -v qubicdb_data:/app/data \
+  -e QUBICDB_HTTP_ADDR=:6060 \
+  -e QUBICDB_DATA_PATH=/app/data \
+  -e QUBICDB_ADMIN_ENABLED=true \
+  -e QUBICDB_ADMIN_USER=admin \
+  -e QUBICDB_ADMIN_PASSWORD=changeme \
+  -e QUBICDB_MCP_ENABLED=true \
+  -e QUBICDB_MCP_PATH=/mcp \
+  -e QUBICDB_MCP_STATELESS=true \
+  -e QUBICDB_MCP_RATE_LIMIT_RPS=30 \
+  -e QUBICDB_MCP_RATE_LIMIT_BURST=60 \
+  -e QUBICDB_MCP_ENABLE_PROMPTS=true \
+  -e QUBICDB_MCP_API_KEY=qubicdb-mcp-secret-key \
+  -e QUBICDB_ALLOWED_ORIGINS=http://localhost:6060,http://localhost:8080,http://127.0.0.1:8080 \
+  -e QUBICDB_REGISTRY_ENABLED=false \
+  -e QUBICDB_VECTOR_ENABLED=true \
+  -e QUBICDB_VECTOR_MODEL_PATH=/app/dist/MiniLM-L6-v2.Q8_0.gguf \
+  -e QUBICDB_VECTOR_GPU_LAYERS=0 \
+  -e QUBICDB_VECTOR_ALPHA=0.6 \
+  -e QUBICDB_VECTOR_QUERY_REPEAT=2 \
+  -e QUBICDB_VECTOR_EMBED_CONTEXT_SIZE=512 \
+  qubicdb/qubicdb-bundled:latest
+```
+
+---
+
 ## Vector Setup
 
 > ⚠️ The official `qubicdb/qubicdb:latest` image does **not** include vector support (no llama.cpp).

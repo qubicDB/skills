@@ -43,7 +43,15 @@ Helper instructions and local patch scripts are also available in the main `qubi
 - [patches/macos-local-vector](https://github.com/qubicDB/qubicdb/tree/main/patches/macos-local-vector)
 - [patches/vector-wrapper](https://github.com/qubicDB/qubicdb/tree/main/patches/vector-wrapper)
 
-**Option C: Docker Run (non-vector)**
+**Option C: Bundled Vector Docker Compose**
+
+```bash
+docker compose -f docker-compose.qubicdb.bundled.yml up -d
+```
+
+This lane uses `qubicdb/qubicdb-bundled:latest`, which includes the example MIT-licensed `MiniLM-L6-v2.Q8_0.gguf` model (about 25 MB). No local build or `dist` mount is required.
+
+**Option D: Docker Run (non-vector)**
 
 ```bash
 docker pull qubicdb/qubicdb:latest
