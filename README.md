@@ -280,6 +280,21 @@ plugins/
 
 ---
 
+## New in v1.1.0: Cross-Index MCP Tools
+
+QubicDB now supports **global and multi-index operations** via MCP:
+
+| Tool | Description |
+|------|-------------|
+| `qubicdb_list_indexes` | List all registered indexes with stats |
+| `qubicdb_global_search` | Search across ALL active indexes |
+| `qubicdb_multi_search` | Search across a specific list of indexes |
+| `qubicdb_recent_indexes` | Get most recently active indexes |
+
+**Use case:** Agents can now discover relationships across hundreds of repositories/indexes — perfect for monorepo insights and cross-project memory.
+
+---
+
 ## Experimental Skills
 
 The `qubicdb-experimental` plugin showcases diverse use cases beyond IDE memory:
