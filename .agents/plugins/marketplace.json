@@ -1,0 +1,32 @@
+{
+  "name": "qubicdb-agent-skills",
+  "interface": {
+    "displayName": "Qubicdb Agent Skills"
+  },
+  "plugins": [
+    {
+      "name": "qubicdb-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/qubicdb-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "qubicdb-experimental",
+      "source": {
+        "source": "local",
+        "path": "./plugins/qubicdb-experimental"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

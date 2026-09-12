@@ -13,21 +13,23 @@ Persistent project-memory workflows for Codex, Claude Code, and hosts supporting
 
 Six optional recipes in `plugins/qubicdb-experimental` cover shared-agent findings, conversation handoffs, knowledge bases, research across indexes, context assembly, and journals. Install them when those workflows are useful; the core bundle does not require them.
 
-## Install skills
+## Install the native plugin
+
+This repository is QubicDB's plugin marketplace for Codex and Claude Code. Both packages include portable Agent Plugins metadata, native client manifests, and the complete skill resources. The core release is **1.3.0**; the optional workflow release is **0.4.0**.
+
+The plugins use your host's existing QubicDB MCP connection. For a new installation, [connect your database once](SETUP.md), then install the plugin below. The package does not hardcode a localhost endpoint or API key, start another database, or create a duplicate MCP server.
 
 ### Codex
 
-From a checkout of this repository, copy the four core skill directories into `~/.agents/skills/` (personal) or `.agents/skills/` in the intended project. Preserve each skill's `references/` and `agents/` subdirectories. Do not overwrite a locally modified skill without reviewing the difference.
+Use a Codex release with `codex plugin` support:
 
 ```sh
-mkdir -p ~/.agents/skills
-cp -R plugins/qubicdb-skills/skills/qubic \
-      plugins/qubicdb-skills/skills/qubic-init \
-      plugins/qubicdb-skills/skills/qubic-search \
-      plugins/qubicdb-skills/skills/qubic-write ~/.agents/skills/
+codex plugin marketplace add qubicDB/skills
+codex plugin add qubicdb-skills@qubicdb-agent-skills
+codex plugin list
 ```
 
-Invoke `$qubic`, `$qubic-search`, `$qubic-write`, or `$qubic-init`, or let Codex select a relevant skill from its description. No Claude-specific runtime or hook is required. [Official Codex skill guidance](https://learn.chatgpt.com/docs/build-skills).
+Start a new task after installation. Select the QubicDB skill from the skill picker, or let Codex choose it from its description. The optional bundle can be installed with `codex plugin add qubicdb-experimental@qubicdb-agent-skills`. [Official Codex plugin guidance](https://developers.openai.com/plugins/build/plugins).
 
 ### Claude Code
 
@@ -36,13 +38,19 @@ Invoke `$qubic`, `$qubic-search`, `$qubic-write`, or `$qubic-init`, or let Codex
 /plugin install qubicdb-skills@qubicdb-agent-skills
 ```
 
-The optional bundle is `qubicdb-experimental@qubicdb-agent-skills`. Alternatively copy the skill directories into `~/.claude/skills/` or project `.claude/skills/`. [Official Claude Code skill guidance](https://code.claude.com/docs/en/skills).
+Restart Claude Code after installation. Invoke `/qubicdb-skills:qubic`, `/qubicdb-skills:qubic-search`, `/qubicdb-skills:qubic-write`, or `/qubicdb-skills:qubic-init`, or let Claude select a relevant skill. The optional bundle is `qubicdb-experimental@qubicdb-agent-skills`. [Official Claude Code plugin guidance](https://code.claude.com/docs/en/plugins).
+
+### Existing manual installs and older clients
+
+Manual skill installation remains supported: copy directories from `plugins/qubicdb-skills/skills/` into `~/.agents/skills/` for Codex or `~/.claude/skills/` for Claude Code, preserving all nested resources. Use either manual copies or the plugin in a given client. When migrating, first verify the installed plugin, then back up and remove only the matching old QubicDB skill copies; preserve local edits and your existing MCP configuration.
+
+Repo marketplace distribution does not mean acceptance into OpenAI's or Anthropic's curated public directories; those have a separate submission and review process.
 
 ## Connect the database
 
 For a local deployment with its own embedding model, use the Docker Hub **`qubicdb/qubicdb-bundled`** image and `docker-compose.qubicdb.bundled.yml`. It includes MiniLM GGUF and its native embedding library. The base and vector-only variants are separate options, not substitutes for the bundled test target.
 
-See [SETUP.md](SETUP.md) for host configuration and verification. Installing a skill does not create an MCP connection.
+See [SETUP.md](SETUP.md) for host configuration and verification. The plugin supplies skills; the host supplies the authenticated MCP connection.
 
 ## Verified behavior and limits
 
@@ -59,6 +67,8 @@ The [capability reference](plugins/qubicdb-skills/skills/qubic/references/capabi
 ## Validate changes
 
 Run the [disposable bundled evaluation](evals/README.md). It checks actual database behavior, including a semantic-versus-lexical contrast; YAML validation alone does not demonstrate correct agent decisions. The [behavioral cases](evals/cases.json) support independent agent runs and trace-based review.
+
+Run `python3 evals/test_packaging.py` for plugin discovery and release consistency checks. See [native installation validation](evals/plugin-validation-2026-09-12.md) for actual client installation results.
 
 Instruction design follows progressive disclosure and targeted triggers, with behavioral evaluation: [OpenAI skill eval example](https://developers.openai.com/blog/eval-skills), [Anthropic authoring guidance](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices).
 

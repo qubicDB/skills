@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "qubicdb-experimental",
+  "description": "Experimental QubicDB skills showcasing advanced use cases \u2014 multi-index research, agent-to-agent memory, sentiment analysis, knowledge bases, and RAG context assembly.",
+  "version": "0.4.0",
+  "author": {
+    "name": "QubicDB"
+  },
+  "homepage": "https://github.com/qubicDB",
+  "repository": "https://github.com/qubicDB/skills",
+  "license": "MIT",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "QubicDB Workflows",
+        "shortDescription": "Persistent project knowledge with QubicDB",
+        "longDescription": "Experimental QubicDB skills showcasing advanced use cases \u2014 multi-index research, agent-to-agent memory, sentiment analysis, knowledge bases, and RAG context assembly.",
+        "developerName": "QubicDB",
+        "category": "Productivity",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "websiteURL": "https://github.com/qubicDB/skills",
+        "defaultPrompt": [
+          "Recall the relevant project decisions.",
+          "Save this verified result for the next session."
+        ]
+      }
+    }
+  }
+}
