@@ -1,144 +1,41 @@
 ---
 name: qubic-write
-description: Write to Qubic memory - store decisions, preferences, todos, and facts
+description: Persist durable facts, decisions, corrections, and session handoffs in QubicDB while avoiding duplicate neurons and preserving provenance.
 ---
 
-# Qubic Write
+# Write QubicDB memory
 
-Store information in Qubic memory. Use MCP tools from `qubicdb` server.
+Use the configured MCP connection and established project index. `qubicdb_write` below is the wire name; use the tool prefix actually exposed by the host. Create a new index only for a new persistent knowledge scope, not for every session, task, topic, or branch.
 
-## Prerequisites
+## Decide whether this needs a neuron
 
-### 1. Pull and run QubicDB
+| Situation | Action |
+|---|---|
+| Existing unchanged fact | Reuse its ID; no write needed |
+| New reusable decision, fact, preference, or resolved finding | Write one self-contained statement with source and relevant scope |
+| Correction or changed decision | Write the new statement, explain what it replaces, and add `supersedes` with the prior ID |
+| Repeated event with distinct time/meaning | Include the event/date in content so it is distinct from the earlier event |
+| Task status or session handoff needed later | Store the current outcome, evidence references, open items, and next step |
+| Temporary speculation, private reasoning, secrets, or routine chatter | Do not persist it as project knowledge |
 
-```bash
-docker pull qubicdb/qubicdb:latest
-docker pull qubicdb/qubicdb-ui:latest
+When a related memory is already known, read it or search narrowly before storing a duplicate or contradictory claim. Do not perform a blanket global search before every write. Preserve uncertainty as uncertainty; an assistant inference is not a user-approved decision.
 
-docker network create qubicdb-net
+## Actual write contract
 
-docker run -d \
-  --name qubicdb \
-  --network qubicdb-net \
-  -p 6060:6060 \
-  -v qubicdb_data:/app/data \
-  -e QUBICDB_HTTP_ADDR=:6060 \
-  -e QUBICDB_DATA_PATH=/app/data \
-  -e QUBICDB_ADMIN_ENABLED=true \
-  -e QUBICDB_ADMIN_USER=admin \
-  -e QUBICDB_ADMIN_PASSWORD=changeme \
-  -e QUBICDB_ALLOWED_ORIGINS=http://localhost:8080 \
-  -e QUBICDB_REGISTRY_ENABLED=false \
-  -e QUBICDB_MCP_ENABLED=true \
-  -e QUBICDB_MCP_PATH=/mcp \
-  -e QUBICDB_MCP_STATELESS=true \
-  -e QUBICDB_MCP_RATE_LIMIT_RPS=30 \
-  -e QUBICDB_MCP_RATE_LIMIT_BURST=60 \
-  -e QUBICDB_MCP_ENABLE_PROMPTS=true \
-  -e QUBICDB_MCP_API_KEY=qubicdb-mcp-secret-key \
-  qubicdb/qubicdb:latest
+`qubicdb_write` accepts `index_id`, `content`, and optional `metadata`. MCP metadata is a **JSON-encoded string with string values**, not an object. Use only useful fields; `type`, `source`, `version`, `recorded_at`, `thread_id`, and `supersedes` are conventions, not required server fields.
 
-docker run -d \
-  --name qubicdb-ui \
-  --network qubicdb-net \
-  -p 8080:80 \
-  qubicdb/qubicdb-ui:latest
-```
-
-Verify:
-
-```bash
-curl http://localhost:6060/health
-```
-
-Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
-
-> **Note:** The `QUBICDB_MCP_API_KEY` must match the `X-API-Key` header in your IDE's MCP config. Change both if you use a custom key.
-
-### 2. Add MCP config to your IDE
-
-**Claude Code** (`.claude/settings.local.json`):
 ```json
-{
-  "mcpServers": {
-    "qubicdb": {
-      "type": "url",
-      "url": "http://localhost:6060/mcp",
-      "headers": { "X-API-Key": "qubicdb-mcp-secret-key" }
-    }
-  }
-}
+{"index_id":"brain-cedar","content":"As of ADR-12, Cedar stores receipts in SQLite; this replaces ADR-11's PostgreSQL decision.","metadata":"{\"type\":\"decision\",\"source\":\"ADR-12\",\"supersedes\":\"PRIOR_NEURON_ID\"}"}
 ```
 
-**Cursor** (`.cursor/mcp.json`):
-```json
-{
-  "mcpServers": {
-    "qubicdb": {
-      "url": "http://localhost:6060/mcp",
-      "headers": { "X-API-Key": "qubicdb-mcp-secret-key" }
-    }
-  }
-}
-```
+Use the actual prior ID, not the placeholder. Keep each neuron independently understandable; split a large handoff or document along useful factual/topic boundaries and preserve source/chunk identity. Repeated decisions need not be copied into every session summary.
 
-**VS Code** (`.vscode/mcp.json`):
-```json
-{
-  "servers": {
-    "qubicdb": {
-      "type": "http",
-      "url": "http://localhost:6060/mcp",
-      "headers": { "X-API-Key": "qubicdb-mcp-secret-key" }
-    }
-  }
-}
-```
+Exact duplicate **content within an index** returns/fires the existing neuron. It does not apply new metadata, and it is not an upsert. Thus writing the same content with `status: done` will not change the previous status. A real status change needs distinct content and a reference to the old record; arbitrary paraphrasing to force duplication is not useful.
 
-**Windsurf** (add in Windsurf MCP settings):
-```json
-{
-  "mcpServers": {
-    "qubicdb": {
-      "serverUrl": "http://localhost:6060/mcp",
-      "headers": { "X-API-Key": "qubicdb-mcp-secret-key" }
-    }
-  }
-}
-```
+Direct neuron update/delete/fire and corresponding command mutations are disabled in the current release. Do not invent `qubicdb_update` or reset an index to remove one record. A correction preserves the old record; `supersedes` does not implement automatic exclusion or guaranteed erasure.
 
-### 3. Verify MCP connection
+Metadata such as `thread_id` and `parent_thread` groups records only. It creates neither an access boundary nor a synapse. The engine forms/strengthens associations through its own activation and background mechanisms.
 
-Run `qubicdb:registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
+## Verify the saved result
 
-## Basic Write (project-wide, no thread)
-
-```
-qubicdb:write(index_id: "brain-PROJECT_NAME", content: "CONTENT_HERE")
-```
-
-## With Metadata (conversation-scoped)
-
-```
-qubicdb:write(index_id: "brain-PROJECT_NAME", content: "CONTENT_HERE", metadata: "{\"type\": \"TYPE\", \"thread_id\": \"THREAD_ID\"}")
-```
-
-## Common Types
-
-| Type | When to use |
-|------|-------------|
-| `preference` | User preferences (usually no thread_id) |
-| `decision` | Architecture/design decisions |
-| `todo` | Tasks (add `status: pending/done`) |
-| `pattern` | Code patterns (usually no thread_id) |
-| `fact` | General facts |
-| `summary` | Session/conversation summaries |
-
-## Persona Responses
-
-| Type | Response |
-|------|----------|
-| Preference | `✨ Qubic will remember this.` |
-| Decision | `🧠 Qubic saved as decision.` |
-| Todo | `📝 Qubic added to todos.` |
-| General | `✨ Qubic saved.` |
+Check tool errors and returned `id`/`_id`, content, and metadata. A duplicate may return an existing ID; report that accurately. Return the index and ID for a useful durable reference without narrating every memory action. Continue the user's primary task.

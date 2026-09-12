@@ -1,0 +1,4 @@
+interface:
+  display_name: "Qubic Init"
+  short_description: "Qubic Init with verified QubicDB behavior"
+  default_prompt: "Use $qubic-init for this QubicDB task."

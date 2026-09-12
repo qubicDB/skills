@@ -1,0 +1,4 @@
+interface:
+  display_name: "Qubic Write"
+  short_description: "Qubic Write with verified QubicDB behavior"
+  default_prompt: "Use $qubic-write for this QubicDB task."

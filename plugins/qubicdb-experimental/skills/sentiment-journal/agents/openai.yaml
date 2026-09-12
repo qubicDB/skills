@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sentiment Journal"
+  short_description: "Sentiment Journal with verified QubicDB behavior"
+  default_prompt: "Use $sentiment-journal for this QubicDB task."

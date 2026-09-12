@@ -1,0 +1,4 @@
+interface:
+  display_name: "Multi Index Research"
+  short_description: "Multi Index Research with verified QubicDB behavior"
+  default_prompt: "Use $multi-index-research for this QubicDB task."

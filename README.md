@@ -1,321 +1,63 @@
-# QubicDB Agent Skills
+# QubicDB skills
 
-Brain-like organic memory for AI agents and IDE assistants — powered by [QubicDB](https://github.com/qubicDB/qubicdb).
+Persistent project-memory workflows for Codex, Claude Code, and hosts supporting the Agent Skills format. Skills teach the agent when to create a neuron, reuse or correct memory, search one or several indexes, and assemble relevant context. They do not replace the MCP server or the host's native memory.
 
-Includes ready-to-use configurations for **Windsurf**, **Cursor**, **VS Code (GitHub Copilot)**, and **Claude Code**. Also available as a **Claude Code Plugin** via marketplace.
+## Core skills
 
----
+| Skill | Job |
+|---|---|
+| `qubic` | Integrate useful cross-session memory into an ongoing task |
+| `qubic-init` | Connect or diagnose QubicDB and resolve the persistent project index |
+| `qubic-search` | Choose scope, strict filters, semantic recall, or exact retrieval |
+| `qubic-write` | Store durable facts, corrections and handoffs without duplicate noise |
 
-## Quick Start
+Six optional recipes in `plugins/qubicdb-experimental` cover shared-agent findings, conversation handoffs, knowledge bases, research across indexes, context assembly, and journals. Install them when those workflows are useful; the core bundle does not require them.
 
-### 1. Start QubicDB
+## Install skills
 
-**Option A: Non-vector Docker Compose**
+### Codex
 
-```bash
-docker compose -f docker-compose.qubicdb.yml up -d
+From a checkout of this repository, copy the four core skill directories into `~/.agents/skills/` (personal) or `.agents/skills/` in the intended project. Preserve each skill's `references/` and `agents/` subdirectories. Do not overwrite a locally modified skill without reviewing the difference.
+
+```sh
+mkdir -p ~/.agents/skills
+cp -R plugins/qubicdb-skills/skills/qubic \
+      plugins/qubicdb-skills/skills/qubic-init \
+      plugins/qubicdb-skills/skills/qubic-search \
+      plugins/qubicdb-skills/skills/qubic-write ~/.agents/skills/
 ```
 
-**Option B: Vector Docker Compose**
+Invoke `$qubic`, `$qubic-search`, `$qubic-write`, or `$qubic-init`, or let Codex select a relevant skill from its description. No Claude-specific runtime or hook is required. [Official Codex skill guidance](https://learn.chatgpt.com/docs/build-skills).
 
-Clone `qubicdb` and `skills` side-by-side:
+### Claude Code
 
 ```text
-your-folder/
-├── qubicdb/
-└── skills/
-```
-
-Then run:
-
-```bash
-docker compose -f docker-compose.qubicdb.vector.yml up -d --build
-```
-
-`docker-compose.qubicdb.vector.yml` expects the vector model at `../qubicdb/dist/MiniLM-L6-v2.Q8_0.gguf`.
-
-**Important:** Download the GGUF model first. Full download commands are documented in [SETUP.md](./SETUP.md).
-
-Helper instructions and local patch scripts are also available in the main `qubicdb` repo:
-
-- [patches/windows-local-vector](https://github.com/qubicDB/qubicdb/tree/main/patches/windows-local-vector)
-- [patches/linux-local-vector](https://github.com/qubicDB/qubicdb/tree/main/patches/linux-local-vector)
-- [patches/macos-local-vector](https://github.com/qubicDB/qubicdb/tree/main/patches/macos-local-vector)
-- [patches/vector-wrapper](https://github.com/qubicDB/qubicdb/tree/main/patches/vector-wrapper)
-
-**Option C: Bundled Vector Docker Compose**
-
-```bash
-docker compose -f docker-compose.qubicdb.bundled.yml up -d
-```
-
-This lane uses `qubicdb/qubicdb-bundled:latest`, which includes the example MIT-licensed `MiniLM-L6-v2.Q8_0.gguf` model (about 25 MB). No local build or `dist` mount is required.
-
-**Option D: Docker Run (non-vector)**
-
-```bash
-docker pull qubicdb/qubicdb:latest
-docker pull qubicdb/qubicdb-ui:latest
-
-docker network create qubicdb-net
-
-docker run -d \
-  --name qubicdb \
-  --network qubicdb-net \
-  -p 6060:6060 \
-  -v qubicdb_data:/app/data \
-  -e QUBICDB_HTTP_ADDR=:6060 \
-  -e QUBICDB_DATA_PATH=/app/data \
-  -e QUBICDB_ADMIN_ENABLED=true \
-  -e QUBICDB_ADMIN_USER=admin \
-  -e QUBICDB_ADMIN_PASSWORD=changeme \
-  -e QUBICDB_MCP_ENABLED=true \
-  -e QUBICDB_MCP_PATH=/mcp \
-  -e QUBICDB_MCP_STATELESS=true \
-  -e QUBICDB_MCP_RATE_LIMIT_RPS=30 \
-  -e QUBICDB_MCP_RATE_LIMIT_BURST=60 \
-  -e QUBICDB_MCP_ENABLE_PROMPTS=true \
-  -e QUBICDB_MCP_API_KEY=qubicdb-mcp-secret-key \
-  -e QUBICDB_ALLOWED_ORIGINS=http://localhost:6060,http://localhost:8080,http://127.0.0.1:8080 \
-  -e QUBICDB_REGISTRY_ENABLED=false \
-  qubicdb/qubicdb:latest
-
-docker run -d \
-  --name qubicdb-ui \
-  --network qubicdb-net \
-  -p 8080:80 \
-  qubicdb/qubicdb-ui:latest
-```
-
-> 📖 For full non-vector setup, vector setup, vector parameters, and troubleshooting, see [SETUP.md](./SETUP.md).
-
-Verify:
-
-```bash
-curl http://localhost:6060/health
-```
-
-Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
-
-> **Note:** The `QUBICDB_MCP_API_KEY` must match the `X-API-Key` header in your IDE's MCP config. Change both if you use a custom key.
-
-### 2. Install skills
-
-**Option A: Claude Code Plugin (recommended for Claude Code)**
-
-```bash
 /plugin marketplace add qubicDB/skills
 /plugin install qubicdb-skills@qubicdb-agent-skills
 ```
 
-**Option B: Copy IDE folder** — pick your IDE below, copy the relevant folder into your project root.
+The optional bundle is `qubicdb-experimental@qubicdb-agent-skills`. Alternatively copy the skill directories into `~/.claude/skills/` or project `.claude/skills/`. [Official Claude Code skill guidance](https://code.claude.com/docs/en/skills).
 
-### 3. Start using
+## Connect the database
 
-Start a conversation — the AI will use QubicDB as persistent memory automatically.
+For a local deployment with its own embedding model, use the Docker Hub **`qubicdb/qubicdb-bundled`** image and `docker-compose.qubicdb.bundled.yml`. It includes MiniLM GGUF and its native embedding library. The base and vector-only variants are separate options, not substitutes for the bundled test target.
 
----
+See [SETUP.md](SETUP.md) for host configuration and verification. Installing a skill does not create an MCP connection.
 
-## Windsurf
+## Verified behavior and limits
 
-Copy `.windsurf/` into your project root. Add MCP server in Windsurf settings (or use `mcp_config.json` as reference):
+- MCP metadata and multi-search index IDs are JSON-encoded **strings**.
+- Exact duplicate content reuses/fires its neuron without updating metadata. Corrections are new, source-linked statements; old records remain.
+- Global search covers loaded indexes only. Multi/global metadata boosts ranking; hard filters require separate strict single-index searches.
+- Search has no per-call vector toggle. Runtime alpha is server-wide; zero removes semantic contribution but still embeds queries.
+- Context budgets are estimates, and context output has no per-neuron IDs. Use selected search results when citations or strict filters matter.
+- Read/search activate memories. Recall is energy-ordered, not guaranteed newest-first. Metadata references do not create synapses.
+- Graph inspection, exact command queries, lifecycle and administration have REST surfaces beyond the ten MCP tools. Direct neuron mutation is disabled in the verified release.
 
-```
-your-project/
-└── .windsurf/
-    ├── rules/
-    │   └── qubic.md              ← always-on rules (191 lines)
-    ├── skills/
-    │   └── qubic/
-    │       └── SKILL.md          ← skill definition (140 lines)
-    └── workflows/
-        ├── qubic-init.md         ← /qubic-init workflow
-        ├── qubic-search.md       ← /qubic-search workflow
-        └── qubic-write.md        ← /qubic-write workflow
-```
+The [capability reference](plugins/qubicdb-skills/skills/qubic/references/capabilities.md) explains when each surface is useful and which apparent features are not supported.
 
-MCP config for Windsurf settings:
+## Validate changes
 
-```json
-{
-  "mcpServers": {
-    "qubicdb": {
-      "serverUrl": "http://localhost:6060/mcp",
-      "headers": {
-        "X-API-Key": "qubicdb-mcp-secret-key"
-      }
-    }
-  }
-}
-```
+Run the [disposable bundled evaluation](evals/README.md). It checks actual database behavior, including a semantic-versus-lexical contrast; YAML validation alone does not demonstrate correct agent decisions. The [behavioral cases](evals/cases.json) support independent agent runs and trace-based review.
 
----
-
-## Cursor
-
-Copy `.cursor/` into your project root:
-
-```
-your-project/
-└── .cursor/
-    ├── mcp.json                  ← MCP server config
-    └── rules/
-        ├── qubic-rules.mdc      ← always-on rules (full port of Windsurf rules)
-        ├── qubic-skill.mdc      ← skill definition (full port of Windsurf skill)
-        ├── qubic-init.mdc       ← init workflow
-        ├── qubic-search.mdc     ← search workflow
-        └── qubic-write.mdc      ← write workflow
-```
-
----
-
-## VS Code (GitHub Copilot)
-
-Copy `.vscode/` and `.github/` into your project root:
-
-```
-your-project/
-├── .vscode/
-│   └── mcp.json                  ← MCP server config
-└── .github/
-    └── copilot-instructions.md   ← all rules + skills + workflows combined
-```
-
----
-
-## Claude Code
-
-Copy `.claude/` into your project root:
-
-```
-your-project/
-└── .claude/
-    ├── CLAUDE.md                     ← project rules (always loaded)
-    ├── settings.local.json           ← MCP server config
-    └── skills/
-        ├── qubic/
-        │   └── SKILL.md              ← main skill definition
-        ├── qubic-init/
-        │   └── SKILL.md              ← /qubic-init skill
-        ├── qubic-search/
-        │   └── SKILL.md              ← /qubic-search skill
-        └── qubic-write/
-            └── SKILL.md              ← /qubic-write skill
-```
-
----
-
-## What's Included
-
-### Per-IDE Files
-
-| IDE | MCP Config | Rules/Skills |
-|-----|-----------|--------------|
-| **Windsurf** | `mcp_config.json` (add in settings) | `.windsurf/rules/` + `.windsurf/skills/` + `.windsurf/workflows/` |
-| **Cursor** | `.cursor/mcp.json` | `.cursor/rules/*.mdc` (5 files) |
-| **VS Code** | `.vscode/mcp.json` | `.github/copilot-instructions.md` |
-| **Claude Code** | `.claude/settings.local.json` | `.claude/CLAUDE.md` + `.claude/skills/` (4 skills) |
-
-### Content (identical across all IDEs)
-
-| Content | Description |
-|---------|-------------|
-| **Rules** | Always-on behavior: session lifecycle, forced behaviors (no fabrication, auto-write triggers), persona, naming conventions |
-| **Skill** | Architecture (index/thread/neuron model), MCP tool reference, metadata types, usage examples |
-| **Init workflow** | Register project brain index, load existing memories |
-| **Search workflow** | Spreading activation search, metadata filters, parameters |
-| **Write workflow** | Store decisions, preferences, todos, facts with metadata |
-
----
-
-## How It Works
-
-QubicDB gives your AI assistant a persistent, organic memory across conversations:
-
-- **One brain per project** — `brain-{project}` index, created once, reused forever
-- **One thread per conversation** — `conv-{uuid}` groups neurons within a session
-- **Hebbian learning** — memories that fire together, wire together
-- **Spreading activation search** — finds related memories through synapse connections
-- **Lifecycle states** — Active → Idle → Sleeping → Dormant with automatic consolidation
-
----
-
-## Claude Code Plugin (Marketplace)
-
-This repo is a **Claude Code Plugin Marketplace**. Install directly:
-
-```bash
-# Add the marketplace
-/plugin marketplace add qubicDB/skills
-
-# Install core skills (MCP memory: write, search, recall, context)
-/plugin install qubicdb-skills@qubicdb-agent-skills
-
-# Install experimental skills (multi-index, agent-to-agent, sentiment, REST API, RAG)
-/plugin install qubicdb-experimental@qubicdb-agent-skills
-```
-
-Plugin structure:
-
-```
-plugins/
-├── qubicdb-skills/              ← core plugin
-│   ├── .claude-plugin/plugin.json
-│   ├── .mcp.json                ← auto-configures MCP server
-│   └── skills/
-│       ├── qubic/SKILL.md
-│       ├── qubic-init/SKILL.md
-│       ├── qubic-search/SKILL.md
-│       └── qubic-write/SKILL.md
-└── qubicdb-experimental/        ← experimental plugin
-    ├── .claude-plugin/plugin.json
-    └── skills/
-        ├── multi-index-research/SKILL.md
-        ├── agent-to-agent/SKILL.md
-        ├── conversation-chains/SKILL.md
-        ├── sentiment-journal/SKILL.md
-        ├── knowledge-base-server/SKILL.md
-        └── rag-context-assembly/SKILL.md
-```
-
----
-
-## New in v1.1.0: Cross-Index MCP Tools
-
-QubicDB now supports **global and multi-index operations** via MCP:
-
-| Tool | Description |
-|------|-------------|
-| `qubicdb_list_indexes` | List all registered indexes with stats |
-| `qubicdb_global_search` | Search across ALL active indexes |
-| `qubicdb_multi_search` | Search across a specific list of indexes |
-| `qubicdb_recent_indexes` | Get most recently active indexes |
-
-**Use case:** Agents can now discover relationships across hundreds of repositories/indexes — perfect for monorepo insights and cross-project memory.
-
----
-
-## Experimental Skills
-
-The `qubicdb-experimental` plugin showcases diverse use cases beyond IDE memory:
-
-| Skill | Description |
-|-------|-------------|
-| **multi-index-research** | Separate brains per research domain, cross-reference between them |
-| **agent-to-agent** | Multiple agents sharing memory through a common brain with role metadata |
-| **conversation-chains** | Track multi-session conversations with thread_id chaining and parent links |
-| **sentiment-journal** | Emotion-aware journaling leveraging built-in VADER sentiment analysis |
-| **knowledge-base** | Build a persistent knowledge base with rich metadata and hybrid search |
-| **rag-context-assembly** | Token-budgeted context assembly using spreading activation (not just vector similarity) |
-
-> Each skill includes full Prerequisites with Docker setup and MCP config for all 4 IDEs.
-
----
-
-## Links
-
-- **QubicDB Server:** [github.com/qubicDB/qubicdb](https://github.com/qubicDB/qubicdb)
-- **Admin UI:** [github.com/qubicDB/qubicdb-ui](https://github.com/qubicDB/qubicdb-ui)
-- **Docker Hub:** [hub.docker.com/r/qubicdb/qubicdb](https://hub.docker.com/r/qubicdb/qubicdb)
-- **Website:** [qubicdb.github.io/qubicdb-web](https://qubicdb.github.io/qubicdb-web/)
-- **API Docs:** [qubicdb.github.io/docs](https://qubicdb.github.io/docs/)
+Instruction design follows progressive disclosure and targeted triggers, with behavioral evaluation: [OpenAI skill eval example](https://developers.openai.com/blog/eval-skills), [Anthropic authoring guidance](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices).

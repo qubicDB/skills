@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Agent Skills for QubicDB — brain-like organic memory for AI agents and IDE assistants.",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "qubicdb-skills",
       "source": "./plugins/qubicdb-skills",
       "description": "Core QubicDB memory skills — write, search, recall, and context assembly via MCP.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "author": {
         "name": "QubicDB"
       },
@@ -26,7 +26,7 @@
       "name": "qubicdb-experimental",
       "source": "./plugins/qubicdb-experimental",
       "description": "Experimental QubicDB skills — multi-index research, agent-to-agent memory, sentiment journal, knowledge base, and RAG context assembly.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "author": {
         "name": "QubicDB"
       },

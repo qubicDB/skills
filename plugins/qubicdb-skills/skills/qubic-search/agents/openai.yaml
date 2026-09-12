@@ -1,0 +1,4 @@
+interface:
+  display_name: "Qubic Search"
+  short_description: "Qubic Search with verified QubicDB behavior"
+  default_prompt: "Use $qubic-search for this QubicDB task."

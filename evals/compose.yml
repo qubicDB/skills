@@ -1,0 +1,31 @@
+services:
+  qubicdb:
+    image: qubicdb/qubicdb-bundled@sha256:a05d69c08f29b084e944f69bb498e741a5fa6652ec8d01e0485946f6ad4ecf96
+    ports:
+      - "127.0.0.1:16060:6060"
+    volumes:
+      - eval_data:/app/data
+    environment:
+      QUBICDB_HTTP_ADDR: ":6060"
+      QUBICDB_DATA_PATH: /app/data
+      QUBICDB_ADMIN_ENABLED: "true"
+      QUBICDB_ADMIN_USER: admin
+      QUBICDB_ADMIN_PASSWORD: changeme
+      QUBICDB_MCP_ENABLED: "true"
+      QUBICDB_MCP_STATELESS: "true"
+      QUBICDB_MCP_API_KEY: qubicdb-mcp-secret-key
+      QUBICDB_REGISTRY_ENABLED: "true"
+      QUBICDB_VECTOR_ENABLED: "true"
+      QUBICDB_VECTOR_MODEL_PATH: /app/dist/MiniLM-L6-v2.Q8_0.gguf
+      QUBICDB_VECTOR_GPU_LAYERS: "0"
+      QUBICDB_VECTOR_ALPHA: "0.6"
+      QUBICDB_VECTOR_QUERY_REPEAT: "2"
+      QUBICDB_VECTOR_EMBED_CONTEXT_SIZE: "512"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:6060/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    mem_limit: 2g
+volumes:
+  eval_data:

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent To Agent"
+  short_description: "Agent To Agent with verified QubicDB behavior"
+  default_prompt: "Use $agent-to-agent for this QubicDB task."

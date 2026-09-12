@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conversation Chains"
+  short_description: "Conversation Chains with verified QubicDB behavior"
+  default_prompt: "Use $conversation-chains for this QubicDB task."

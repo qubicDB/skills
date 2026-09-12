@@ -1,7 +1,7 @@
 {
   "name": "qubicdb-experimental",
-  "description": "Experimental QubicDB skills showcasing advanced use cases — multi-index research, agent-to-agent memory, sentiment analysis, knowledge bases, and RAG context assembly.",
-  "version": "0.1.0",
+  "description": "Experimental QubicDB skills showcasing advanced use cases \u2014 multi-index research, agent-to-agent memory, sentiment analysis, knowledge bases, and RAG context assembly.",
+  "version": "0.2.0",
   "author": {
     "name": "QubicDB"
   },

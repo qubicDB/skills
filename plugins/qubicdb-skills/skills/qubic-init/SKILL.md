@@ -1,135 +1,23 @@
 ---
 name: qubic-init
-description: Initialize Qubic brain for current project - register index and load existing knowledge
+description: Set up or diagnose a QubicDB connection and resolve the persistent index for a project, including a local bundled embedding-model deployment.
 ---
 
-# Qubic Init
+# Connect QubicDB
 
-Initialize Qubic memory for this project. Use MCP tools from `qubicdb` server.
+Inspect the existing endpoint and project mapping first. Reuse a working deployment; installation is not a prerequisite for each read or write. Do not replace a configured stage/remote server with localhost silently.
 
-## Prerequisites
+For a requested local model-enabled installation, use Docker Hub **`qubicdb/qubicdb-bundled`**, which contains the GGUF embedding model and native library. The base `qubicdb/qubicdb` image does not include that model. Record the image digest used for testing.
 
-### 1. Pull and run QubicDB
+Read [references/setup.md](references/setup.md) for Compose, Codex/Claude connection configuration, and model verification. Start only services needed for the task and use a distinct loopback port and data volume for experiments.
 
-```bash
-docker pull qubicdb/qubicdb:latest
-docker pull qubicdb/qubicdb-ui:latest
+## Verify without polluting memory
 
-docker network create qubicdb-net
+1. Check health and MCP initialization/`tools/list` using the actual configured credentials. A registry write is not a health probe.
+2. Discover the deployed schemas. The current server has ten `qubicdb_*` wire tools; an allowlist or older deployment can expose fewer. Do not assume the host's prefix or fixed server version tells you the available features.
+3. Identify the correct existing project index from its configured ID or registry metadata. Recent activity is only a hint. If persistent memory for a new scope is requested, call `qubicdb_registry_find_or_create(uuid)` and use its returned `uuid` as `index_id`.
+4. Load only context relevant to the current task. Registration alone does not make the index active; do not create a `test` brain during ordinary setup checks.
 
-docker run -d \
-  --name qubicdb \
-  --network qubicdb-net \
-  -p 6060:6060 \
-  -v qubicdb_data:/app/data \
-  -e QUBICDB_HTTP_ADDR=:6060 \
-  -e QUBICDB_DATA_PATH=/app/data \
-  -e QUBICDB_ADMIN_ENABLED=true \
-  -e QUBICDB_ADMIN_USER=admin \
-  -e QUBICDB_ADMIN_PASSWORD=changeme \
-  -e QUBICDB_ALLOWED_ORIGINS=http://localhost:8080 \
-  -e QUBICDB_REGISTRY_ENABLED=false \
-  -e QUBICDB_MCP_ENABLED=true \
-  -e QUBICDB_MCP_PATH=/mcp \
-  -e QUBICDB_MCP_STATELESS=true \
-  -e QUBICDB_MCP_RATE_LIMIT_RPS=30 \
-  -e QUBICDB_MCP_RATE_LIMIT_BURST=60 \
-  -e QUBICDB_MCP_ENABLE_PROMPTS=true \
-  -e QUBICDB_MCP_API_KEY=qubicdb-mcp-secret-key \
-  qubicdb/qubicdb:latest
+Keep the project-to-index mapping in existing project configuration or a concise local reference. Reuse it across conversations. Metadata can distinguish topics/sessions within that index. Dedicated indexes can represent genuinely different owners, environments, or retention policies; application authorization still controls who can query them.
 
-docker run -d \
-  --name qubicdb-ui \
-  --network qubicdb-net \
-  -p 8080:80 \
-  qubicdb/qubicdb-ui:latest
-```
-
-Verify:
-
-```bash
-curl http://localhost:6060/health
-```
-
-Admin UI: `http://localhost:8080` — login with `admin` / `changeme`.
-
-> **Note:** The `QUBICDB_MCP_API_KEY` must match the `X-API-Key` header in your IDE's MCP config. Change both if you use a custom key.
-
-### 2. Add MCP config to your IDE
-
-**Claude Code** (`.claude/settings.local.json`):
-```json
-{
-  "mcpServers": {
-    "qubicdb": {
-      "type": "url",
-      "url": "http://localhost:6060/mcp",
-      "headers": { "X-API-Key": "qubicdb-mcp-secret-key" }
-    }
-  }
-}
-```
-
-**Cursor** (`.cursor/mcp.json`):
-```json
-{
-  "mcpServers": {
-    "qubicdb": {
-      "url": "http://localhost:6060/mcp",
-      "headers": { "X-API-Key": "qubicdb-mcp-secret-key" }
-    }
-  }
-}
-```
-
-**VS Code** (`.vscode/mcp.json`):
-```json
-{
-  "servers": {
-    "qubicdb": {
-      "type": "http",
-      "url": "http://localhost:6060/mcp",
-      "headers": { "X-API-Key": "qubicdb-mcp-secret-key" }
-    }
-  }
-}
-```
-
-**Windsurf** (add in Windsurf MCP settings):
-```json
-{
-  "mcpServers": {
-    "qubicdb": {
-      "serverUrl": "http://localhost:6060/mcp",
-      "headers": { "X-API-Key": "qubicdb-mcp-secret-key" }
-    }
-  }
-}
-```
-
-### 3. Verify MCP connection
-
-Run `qubicdb:registry_find_or_create(uuid: "test")` — if it returns a result, you're connected. If it fails, check `docker logs qubicdb` for errors.
-
-## Steps
-
-1. Register project index: (or you can use the existing one - or even create thread id if needed)
-```
-qubicdb:registry_find_or_create(uuid: "brain-PROJECT_NAME")
-```
-
-2. Load existing knowledge: (you can change the parameters or query preferences as you like)
-```
-qubicdb:search(index_id: "brain-PROJECT_NAME", query: "preferences decisions context patterns", depth: 2, limit: 25)
-```
-
-3. Respond with persona:
-```
-🧠 Qubic active — {N} memories loaded.
-```
-
-## Notes
-- Replace PROJECT_NAME with actual project name
-- Index is created once, reused for all conversations
-- thread_id is optional metadata for conversation grouping
-- metadata is optional metadata for filtering but useful for organizing memories
+Report the endpoint, selected index, observed tool availability, and whether the model actually loaded. If the model failed, call the connection lexical-only until verified otherwise; an enabled setting is not proof of successful initialization.

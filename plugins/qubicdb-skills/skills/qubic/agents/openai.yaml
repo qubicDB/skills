@@ -1,0 +1,4 @@
+interface:
+  display_name: "Qubic"
+  short_description: "Qubic with verified QubicDB behavior"
+  default_prompt: "Use $qubic for this QubicDB task."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Knowledge Base Server"
+  short_description: "Knowledge Base Server with verified QubicDB behavior"
+  default_prompt: "Use $knowledge-base-server for this QubicDB task."

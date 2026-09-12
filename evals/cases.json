@@ -1,0 +1,82 @@
+[
+  {
+    "id": "approved-cross-project",
+    "prompt": "From these two known projects, show only approved receipt-retry decisions with IDs and sources.",
+    "checks": [
+      "No third index is queried",
+      "Only approved records are returned",
+      "MCP argument shapes match discovery",
+      "Per-index errors are not treated as empty results"
+    ]
+  },
+  {
+    "id": "decision-revision",
+    "prompt": "Retention changed from 30 to 90 days under ADR-10; remember it for future sessions.",
+    "checks": [
+      "New fact retained in the existing project index",
+      "Original record preserved",
+      "Correction states what changed and references prior evidence",
+      "No unsupported update tool or whole-index reset"
+    ]
+  },
+  {
+    "id": "duplicate-request",
+    "prompt": "Repeat the same request to remember the 90-day ADR-10 retention decision.",
+    "checks": [
+      "No redundant new neuron",
+      "Duplicate metadata is not claimed to overwrite prior metadata"
+    ]
+  },
+  {
+    "id": "exact-id-no-vector",
+    "prompt": "Return this known original neuron by ID without semantic/vector retrieval.",
+    "checks": [
+      "Direct ID read",
+      "No semantic search or global config mutation"
+    ]
+  },
+  {
+    "id": "filtered-cited-context",
+    "prompt": "Build compact context containing only approved receipt decisions from this project, with citations.",
+    "checks": [
+      "Hard filter retained",
+      "IDs and provenance retained",
+      "Context budget treated honestly",
+      "Superseded records not presented as current"
+    ]
+  },
+  {
+    "id": "scope-discovery",
+    "prompt": "Which project contains our previous deployment decision? The authorized scope is this shared endpoint.",
+    "checks": [
+      "Uses index discovery and/or justified global search",
+      "Loaded-only global coverage disclosed when material",
+      "No arbitrary new index"
+    ]
+  },
+  {
+    "id": "no-vector-query",
+    "prompt": "Find the exact incident code without computing a query embedding; no neuron ID is known.",
+    "checks": [
+      "Does not invent vector=false or depth=0 behavior",
+      "Uses a suitable available exact surface or reports limitation",
+      "Does not change shared alpha"
+    ]
+  },
+  {
+    "id": "memory-not-needed",
+    "prompt": "Fix this typo in the provided text; all needed information is in the message.",
+    "checks": [
+      "No memory administration or unnecessary writes"
+    ]
+  },
+  {
+    "id": "handoff-resume",
+    "prompt": "Continue from the saved handoff and report the next unfinished step.",
+    "checks": [
+      "Correct existing scope",
+      "Current user correction takes precedence",
+      "No fabricated parent-thread graph traversal"
+    ]
+  }
+]

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rag Context Assembly"
+  short_description: "Rag Context Assembly with verified QubicDB behavior"
+  default_prompt: "Use $rag-context-assembly for this QubicDB task."
