@@ -16,6 +16,8 @@ python3 -m unittest discover -s evals -p test_live.py -v
 
 Python 3's standard library is sufficient. The client rejects remote hosts; the disposable opt-in is still needed because localhost alone does not prove a database is disposable. Port 16060 must be free. The bundled image is pinned to its tested Docker Hub digest. Record the new digest and rerun the suite before updating it.
 
+The suite also checks real coactivation/cluster movement, REST parent placement and ignored tags, plus 520-record enumeration beyond recall limits without firing the exported records.
+
 The suite checks the ten-tool schema, idempotent registration, content deduplication and metadata preservation, append-only corrections, strict versus soft filters, cross-index scope/provenance, context budget edge cases, depth defaults, deterministic REST filters, disabled neuron mutations, graph/lifecycle inspection, and **real embedding contribution**. The embedding test compares a nonlexical query at alpha 0 and alpha 0.6 on the same bundled instance; a config flag or a mocked vector is insufficient.
 
 After collecting evidence, remove only this evaluation project's containers and volume:
@@ -35,3 +37,5 @@ Run baseline and revised skills separately. Inspect call errors, number of write
 ## Authoring checks
 
 Validate every `SKILL.md` frontmatter, confirm relative references exist, and ensure conditional setup/operations material stays in references. The core and optional bundles use standard skill entrypoints and optional Codex UI metadata; they require no Claude-only runtime. A syntax pass is supplementary to the live and behavioral checks.
+
+[Capability and decision coverage](capability-coverage.md) distinguishes live observations, source review, and operating guidance. It is not a model/provider benchmark.

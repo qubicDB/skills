@@ -14,3 +14,5 @@ Store handoff metadata as a JSON string of string values, such as `{"type":"hand
 `thread_id` and `parent_thread` are application conventions, not graph edges or automatic chain traversal. Follow a known parent by an explicit filtered search; do not claim the engine assembled the whole chain. Record uncertainty when a parent or prior session is missing.
 
 `qubicdb_context` can supply compact project background, but cannot enforce a thread filter and does not return per-neuron IDs. Assemble selected search results yourself when the handoff must be limited to a task or cited. Preserve the current user's instructions over stored plans; memory supplements the active task and local planning files.
+
+At meaningful transitions retain the objective, latest user constraints, completed/verified outcomes, unresolved work and next action, with supporting IDs/paths. After context loss read the latest known handoff and verify current workspace state. Old high-energy summaries are not necessarily current. Engine consolidation does not produce handoff text or resolve changed decisions.

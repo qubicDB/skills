@@ -14,3 +14,5 @@ Use `qubicdb_global_search` when discovering relevant projects across the endpoi
 Multi/global metadata is a soft boost even when the tool description says filter. For “only this source/status/thread,” run `qubicdb_search` with JSON-string `metadata` and `strict: true` separately in each selected index. Merge the verified results, including missing or failed scopes as limitations.
 
 Cross-index merge order uses activation history rather than a calibrated semantic score. Compare the source content, not ranks across independent brains. Graph traversal occurs inside each index; cross-domain synthesis is the assistant's reasoning, not an automatic cross-index synapse.
+
+A complete cross-project inventory needs an explicit permitted index set and counted per-index enumeration. Global similarity search is not enumeration. Preserve scope when storing any synthesized conclusion; cross-project comparison does not automatically authorize copying every source into one shared index.

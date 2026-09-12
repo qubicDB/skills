@@ -1,0 +1,240 @@
+[
+  {
+    "need": "A known memory",
+    "decision": "Read its ID instead of semantic/all-data retrieval",
+    "mechanism": "MCP read; worker fires the neuron",
+    "implementation": "pkg/api/mcp_backend.go; pkg/concurrency/brain_worker.go",
+    "evidence": "Live read and original-preservation checks"
+  },
+  {
+    "need": "A topical question",
+    "decision": "Retrieve the relevant subset, then assess sources and revisions",
+    "mechanism": "Hybrid search, strict metadata and bounded output",
+    "implementation": "pkg/engine/search.go; pkg/mcp/server.go",
+    "evidence": "Live hybrid contrast and strict-filter checks"
+  },
+  {
+    "need": "A complete collection",
+    "decision": "Count, enumerate stable IDs, verify distinct count, write to disk",
+    "mechanism": "REST command count/find; recall/search are capped",
+    "implementation": "pkg/protocol/executor.go; pkg/api/server.go",
+    "evidence": "520 records: 500 MCP recall, 100 REST recall, 520 verified export"
+  },
+  {
+    "need": "A complete server backup",
+    "decision": "Distinguish known API records from all physical storage/internal state",
+    "mechanism": "Storage snapshots/WAL/manifest; API export is not a backup",
+    "implementation": "pkg/persistence/store.go; pkg/api/server.go",
+    "evidence": "Source reviewed; no whole-server disaster-recovery claim"
+  },
+  {
+    "need": "New persistent knowledge scope",
+    "decision": "Reuse topic/session scope; create only a distinct durable domain",
+    "mechanism": "Registry identity separate from loaded worker/storage",
+    "implementation": "pkg/registry/registry.go; pkg/concurrency/pool.go",
+    "evidence": "Live registration and loaded/registered distinction"
+  },
+  {
+    "need": "Selected projects together",
+    "decision": "Keep explicit scope/provenance; strict restrictions require per-index searches",
+    "mechanism": "Multi-search JSON-string IDs; per-index errors",
+    "implementation": "pkg/api/mcp_backend.go; pkg/mcp/server.go",
+    "evidence": "Live selected-index and soft/strict checks"
+  },
+  {
+    "need": "Broad project discovery",
+    "decision": "Use global only when warranted; do not claim unloaded coverage",
+    "mechanism": "Loaded workers only; merge uses activation proxy",
+    "implementation": "pkg/api/mcp_backend.go",
+    "evidence": "Live broad scope check; failure-merging behavior source reviewed"
+  },
+  {
+    "need": "One reusable meaning",
+    "decision": "Keep qualifications with their decision; split independently changing facts",
+    "mechanism": "One write creates one neuron",
+    "implementation": "pkg/engine/matrix_ops.go; pkg/core/content_validation.go",
+    "evidence": "Guidance traced to data and retrieval behavior"
+  },
+  {
+    "need": "Unchanged fact versus repeated event",
+    "decision": "Reuse fact ID; give a distinct event real event content",
+    "mechanism": "Exact content hash deduplication before metadata",
+    "implementation": "pkg/engine/matrix_ops.go; pkg/core/types.go",
+    "evidence": "Live duplicate and revision checks"
+  },
+  {
+    "need": "Correction versus erasure",
+    "decision": "Append a sourced revision; do not claim original deletion",
+    "mechanism": "No automatic supersession; direct mutations disabled",
+    "implementation": "pkg/protocol/executor.go; pkg/api/server.go",
+    "evidence": "Live mutation rejection and original retained"
+  },
+  {
+    "need": "Large documents",
+    "decision": "Coherent source/versioned sections, not a mixed transcript neuron",
+    "mechanism": "64KiB default; internal chunks average into one vector",
+    "implementation": "pkg/core/content_validation.go; pkg/vector/vectorizer.go",
+    "evidence": "Core validation tests; chunking source reviewed"
+  },
+  {
+    "need": "Conceptual versus exact search",
+    "decision": "Use concepts for recall, exact ID/filter for deterministic/no-vector lookup",
+    "mechanism": "Lexical plus embeddings, no per-query switch",
+    "implementation": "pkg/engine/search.go; pkg/protocol/query.go",
+    "evidence": "Live nonlexical contrast and exact filter"
+  },
+  {
+    "need": "Embedding availability",
+    "decision": "Check actual initialization/behavior, not only config/health",
+    "mechanism": "Model load failures can leave lexical fallback",
+    "implementation": "pkg/vector/vectorizer.go; pkg/engine/search.go",
+    "evidence": "Bundled MiniLM initialized and semantic contrast passed"
+  },
+  {
+    "need": "Code, markup and multilingual evidence",
+    "decision": "Verify exact content and relevance; do not infer model competence",
+    "mechanism": "Text cleaner and English sentence chunker affect embedding input",
+    "implementation": "pkg/vector/text_cleaner.go; pkg/vector/vectorizer.go",
+    "evidence": "Source reviewed; no multilingual quality benchmark claim"
+  },
+  {
+    "need": "Spatial versus semantic representation",
+    "decision": "Do not assign semantic axes or rank by position distance",
+    "mechanism": "Position separate from Embedding; scorer ignores Euclidean position",
+    "implementation": "pkg/core/types.go; pkg/engine/search.go",
+    "evidence": "Live initial 3D position and growth to 6D; 384D model"
+  },
+  {
+    "need": "Meaningful associations",
+    "decision": "Relevant joint use can teach; noisy broad reads/imports can teach noise",
+    "mechanism": "Write/read/search trigger 5-second coactivation",
+    "implementation": "pkg/concurrency/brain_worker.go; pkg/synapse/hebbian.go",
+    "evidence": "Live edge weight/cofire count increased after joint reads"
+  },
+  {
+    "need": "Spatial grouping at formation",
+    "decision": "REST top-level parent_id can influence placement; metadata cannot",
+    "mechanism": "Parent perturbation, random fallback if missing",
+    "implementation": "pkg/api/server.go; pkg/engine/matrix_ops.go",
+    "evidence": "Live parent bounds and ignored tags check"
+  },
+  {
+    "need": "Cluster evolution",
+    "decision": "Inspect actual weights/positions; no promise of typed causality",
+    "mechanism": "Attraction, centroid pull, repulsion and sleeping reorganisation",
+    "implementation": "pkg/synapse/hebbian.go; pkg/daemon/workers.go",
+    "evidence": "Live pair distance decreased; synapse unit tests passed"
+  },
+  {
+    "need": "Spatial growth",
+    "decision": "Do not shard just because geometry grows",
+    "mechanism": "Count/dimension >100 expansion; deletion can contract",
+    "implementation": "pkg/engine/matrix_ops.go",
+    "evidence": "520-neuron index reached six spatial dimensions"
+  },
+  {
+    "need": "Depth",
+    "decision": "Use for existing graph exploration, not deeper model reasoning",
+    "mechanism": "Attenuated traversal, threshold, 0 clamped to 2",
+    "implementation": "pkg/engine/search.go; pkg/api/mcp_backend.go",
+    "evidence": "Live depth-default and engine tests"
+  },
+  {
+    "need": "Inventory without teaching",
+    "decision": "Prefer recall/exact find/graph inspection for bulk observation",
+    "mechanism": "No per-neuron fire on recall/find",
+    "implementation": "pkg/concurrency/brain_worker.go; pkg/protocol/executor.go",
+    "evidence": "520 exported records retained accessCount=1; recall preserved cofire count"
+  },
+  {
+    "need": "Current versus historical truth",
+    "decision": "Resolve applicable versions/dates/supersession, not energy rank",
+    "mechanism": "Activity boosts ranking; supersedes is ordinary metadata",
+    "implementation": "pkg/engine/search.go; pkg/core/types.go",
+    "evidence": "Source and live original/correction preservation"
+  },
+  {
+    "need": "Limited prompt context",
+    "decision": "Choose bounded relevant evidence; preserve filter/citation requirements",
+    "mechanism": "Context uses 50 candidates, approximate budget, first oversized item stops",
+    "implementation": "pkg/api/mcp_backend.go",
+    "evidence": "Live small and oversized budget checks"
+  },
+  {
+    "need": "Long-task checkpoint/resume",
+    "decision": "Keep objective, latest constraints, verified outcomes, remaining work and evidence IDs",
+    "mechanism": "Application handoff; no automatic semantic summary/chain traversal",
+    "implementation": "Skill references/long-tasks.md; pkg/mcp/server.go",
+    "evidence": "Operational guidance; not presented as a long-context model benchmark"
+  },
+  {
+    "need": "Consolidation",
+    "decision": "Do not expect it to summarize, merge facts, or settle contradictions",
+    "mechanism": "Sleeping daemon; age>=30min, accesses>=10, energy<0.5; increments depth",
+    "implementation": "pkg/concurrency/brain_worker.go; pkg/core/types.go",
+    "evidence": "Core/concurrency/daemon tests passed"
+  },
+  {
+    "need": "Decay and forgetting",
+    "decision": "Do not promise TTL erasure of ordinary neurons",
+    "mechanism": "BaseEnergy0.1 above alive threshold0.01; weak synapses prune",
+    "implementation": "pkg/core/types.go; pkg/synapse/hebbian.go",
+    "evidence": "Core/synapse tests passed"
+  },
+  {
+    "need": "Index lifecycle",
+    "decision": "Loading/waking/eviction are not create/delete of knowledge",
+    "mechanism": "Active/idle/sleep/dormant and persisted worker reload",
+    "implementation": "pkg/lifecycle/manager.go; pkg/concurrency/pool.go",
+    "evidence": "Lifecycle tests and live wake/sleep/persistence"
+  },
+  {
+    "need": "Durability",
+    "decision": "Do not equate in-memory acknowledgement or persisted:true with verified disk guarantee",
+    "mechanism": "Scheduled/explicit persistence, fsync/WAL; handler ignores persist error",
+    "implementation": "pkg/persistence/store.go; pkg/api/server.go",
+    "evidence": "Persistence tests and restart test; failure acknowledgement source reviewed"
+  },
+  {
+    "need": "Sentiment",
+    "decision": "Treat as secondary ranking signal; do not fabricate returned scores",
+    "mechanism": "VADER internal fields omitted from MCP documents",
+    "implementation": "pkg/sentiment/analyzer.go; pkg/protocol/query.go",
+    "evidence": "Source reviewed; no measured-emotion claim"
+  },
+  {
+    "need": "Registry changes",
+    "decision": "Do not treat metadata/UUID changes as data migration or erasure",
+    "mechanism": "Registry update/delete separate from matrix storage",
+    "implementation": "pkg/registry/registry.go; pkg/api/server.go",
+    "evidence": "Source reviewed"
+  },
+  {
+    "need": "Unsupported commands/fields",
+    "decision": "Use the working surface, never silently pretend success",
+    "mechanism": "Disabled update/delete/activate; unregistered aggregate; dropped insert metadata/tags",
+    "implementation": "pkg/protocol/executor.go; pkg/api/server.go",
+    "evidence": "Live mutation and ignored-tags checks; protocol tests"
+  },
+  {
+    "need": "Operational acknowledgements",
+    "decision": "Inspect effect/error evidence before reporting admin success",
+    "mechanism": "Daemon pause/resume and GC placeholders; stats-only export",
+    "implementation": "pkg/api/server.go",
+    "evidence": "Source reviewed; no claim these features operate"
+  },
+  {
+    "need": "MCP discovery and prompt templates",
+    "decision": "Use actual tool schema; optional prompt is a recipe, not retrieved data",
+    "mechanism": "10 tools, optional qubicdb_memory_recall prompt",
+    "implementation": "pkg/mcp/server.go; pkg/core/brain.go",
+    "evidence": "Live schema check; prompt and allowlist validation source reviewed"
+  },
+  {
+    "need": "Transport and access scope",
+    "decision": "Use configured endpoint/credentials and host authorization; namespaces are not access control",
+    "mechanism": "API key MCP middleware, Basic admin, deployment allowlists/rate limits",
+    "implementation": "pkg/mcp/server.go; pkg/api/server.go",
+    "evidence": "Live MCP/admin contracts and native Codex lookup from earlier pass"
+  }
+]

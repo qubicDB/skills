@@ -1,6 +1,23 @@
-# QubicDB skill validation — 2026-09-12
+# QubicDB validation record — 2026-09-12
 
-## Runtime and sources
+## Source and operational reasoning pass (core skills 1.2.0)
+
+The initial six-request compatibility pass below was insufficient to evaluate the full memory workflow. The subsequent work focused on understanding QubicDB and deriving the skill's choices from its actual implementation, rather than pursuing a model/provider benchmark.
+
+- [34 capability/decision families and every documented HTTP route](capability-coverage.md) are mapped to their implementation and evidence. The map distinguishes agent choices, automatic engine behavior, disabled features and placeholder acknowledgements.
+- Main guidance now separates neuron meaning/granularity, durable index boundaries, read scope, complete-data needs, semantic/spatial relationships, and evolving long-task state. Mode-specific detail is in conditional references.
+- The expanded bundled live suite passed **13/13**. New checks cover actual coactivation/edge strengthening/spatial movement, REST parent placement versus metadata and ignored tags, and complete enumeration beyond recall limits.
+- A 520-record index returned 500 through MCP recall and 100 through REST recall. The helper enumerated all 520 unique records using counted `_id` pages without firing those records; the index expanded to six spatial dimensions. This is a logical API export, not a transaction snapshot or restorable full-storage backup.
+- A relationship probe measured edge weight increasing from 0.2 to about 0.656 after genuine coactivation, with pair distance decreasing. The spatial coordinates are separate from the 384-dimensional embeddings.
+- Existing source test suites passed for core, engine, synapse, lifecycle, daemon, protocol, persistence, and concurrency.
+- An independent source/skill review found no material actionable discrepancy in the reviewed decision guidance or enumeration helper.
+- No claim is made that a broad model/long-context benchmark was completed. The task focus was corrected to skill reasoning and full capability understanding; model/provider work was stopped.
+
+## Initial compatibility pass (core skills 1.1.0)
+
+The following observations remain a historical record of the earlier narrower pass, not sufficient evidence by themselves for the revised task.
+
+### Runtime and sources
 
 - Core source: `qubicDB/qubicdb@5d3ec2fddfd9503c1a5c6ef932a08a330ba7e512`.
 - Documentation source: `qubicDB/docs@3b33d21f81331e9084468bc0444c090fbfc603fb`.

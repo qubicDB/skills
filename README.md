@@ -61,3 +61,7 @@ The [capability reference](plugins/qubicdb-skills/skills/qubic/references/capabi
 Run the [disposable bundled evaluation](evals/README.md). It checks actual database behavior, including a semantic-versus-lexical contrast; YAML validation alone does not demonstrate correct agent decisions. The [behavioral cases](evals/cases.json) support independent agent runs and trace-based review.
 
 Instruction design follows progressive disclosure and targeted triggers, with behavioral evaluation: [OpenAI skill eval example](https://developers.openai.com/blog/eval-skills), [Anthropic authoring guidance](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices).
+
+## How the agent chooses its memory behavior
+
+The core workflow now separates read granularity, knowledge granularity and persistent index boundaries. It distinguishes a known record, a relevant working set, a cross-project question and a complete export; meaningful neuron formation and corrections; semantic vectors and learned spatial relationships; and checkpoints for changing long-running tasks. Read the [capability/decision coverage map](evals/capability-coverage.md) for source-backed mechanisms and evidence. Detailed instructions live in conditional references, with a counted JSONL enumeration helper for full-data requests.

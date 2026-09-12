@@ -21,3 +21,5 @@ Read [references/setup.md](references/setup.md) for Compose, Codex/Claude connec
 Keep the project-to-index mapping in existing project configuration or a concise local reference. Reuse it across conversations. Metadata can distinguish topics/sessions within that index. Dedicated indexes can represent genuinely different owners, environments, or retention policies; application authorization still controls who can query them.
 
 Report the endpoint, selected index, observed tool availability, and whether the model actually loaded. If the model failed, call the connection lexical-only until verified otherwise; an enabled setting is not proof of successful initialization.
+
+A new conversation/topic does not itself justify a new index. Distinct long-lived projects, environments, owners or retention purposes can. Keep a shared knowledge domain intentional; global search can compare existing scopes without copying them into a new universal brain. Unexpectedly missing data may reflect an unloaded or failed persisted brain, not a reason to register a fresh one.

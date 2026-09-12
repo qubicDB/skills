@@ -16,3 +16,5 @@ Retrieve using `qubicdb_search`. Use natural-language cues for semantic matching
 Use `qubicdb_context` for approximate-budget unfiltered background. For citations, version filters, or precise prompt budgets, select search results and build context locally, keeping `(index_id, _id, source)` references. `recall` is currently energy-ordered, not guaranteed newest-first. Use the authorized REST `find/count` integration for exact filters when available; do not invent an MCP command tool.
 
 The engine manages decay, consolidation and associations; index lifecycle is not a document-version state machine. Keep a real source of record for documents and decisions. A statistics export is not a full knowledge-base backup.
+
+Write/read/search activity within the same index can form associations through a five-second coactivation window, including between unrelated rapid imports. Use coherent records and relevant working sets; for full inventory/export, prefer exact enumeration that does not fire every neuron. Internal embedding chunks do not become separate retrievable records.

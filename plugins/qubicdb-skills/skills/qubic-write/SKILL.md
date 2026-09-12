@@ -20,6 +20,10 @@ Use the configured MCP connection and established project index. `qubicdb_write`
 
 When a related memory is already known, read it or search narrowly before storing a duplicate or contradictory claim. Do not perform a blanket global search before every write. Preserve uncertainty as uncertainty; an assistant inference is not a user-approved decision.
 
+Preserve a decision together with the exception/rationale needed to interpret it. Split records with unrelated subjects, independent validity, or separate source versions. A document embedded in internal chunks is still one neuron, so write coherent independently retrievable sections rather than one mixed-topic transcript.
+
+For relationship construction, REST parent placement and ingestion side effects, read [references/relationships.md](references/relationships.md). For evolving decisions, checkpoints and resumption, read [references/handoffs.md](references/handoffs.md).
+
 ## Actual write contract
 
 `qubicdb_write` accepts `index_id`, `content`, and optional `metadata`. MCP metadata is a **JSON-encoded string with string values**, not an object. Use only useful fields; `type`, `source`, `version`, `recorded_at`, `thread_id`, and `supersedes` are conventions, not required server fields.

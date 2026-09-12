@@ -14,3 +14,5 @@ Readers use `qubicdb_search` with a focused cue. Add `strict: true` and the requ
 Reuse unchanged facts. Exact duplicate content returns the existing neuron without replacing its metadata, so another agent writing the same content does not change authorship. A distinct finding, revision, or event should say what is new and reference the prior ID when relevant.
 
 Metadata is provenance, not authentication, a lock, a queue, or a delivery guarantee. Read/search affect activation; similar writes do not guarantee graph edges. Retain `(index_id, _id)` references and resolve conflicting findings against sources and the current task.
+
+Write/read/search activity within the same index can form associations through a five-second coactivation window, including between unrelated rapid imports. Use coherent records and relevant working sets; for full inventory/export, prefer exact enumeration that does not fire every neuron. Internal embedding chunks do not become separate retrievable records.

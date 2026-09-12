@@ -5,8 +5,13 @@ unique eval prefix. Admin alpha changes are restored even when an assertion fail
 """
 
 import base64
+import importlib.util
 import json
+import math
 import os
+from pathlib import Path
+import tempfile
+import time
 import unittest
 import urllib.error
 import urllib.request
@@ -162,6 +167,73 @@ class LiveContract(unittest.TestCase):
         self.rest("/v1/brain/sleep", {}, index=index)
         self.rest("/v1/brain/wake", {}, index=index)
         self.assertEqual(self.client.call("qubicdb_recall", index_id=index, limit=5)["count"], 1)
+
+    def test_coactivation_strengthens_and_moves_related_neurons(self):
+        index = self.index("spatial")
+        a = self.write(index, "Gateway retries retain the payment key.")
+        b = self.write(index, "Payment key deduplication prevents duplicate charges.")
+        initial = self.rest("/v1/graph", index=index)
+        edge = self.rest("/v1/synapses", index=index)["synapses"][0]
+        self.assertAlmostEqual(edge["weight"], 0.2, places=3)
+        self.client.call("qubicdb_recall", index_id=index, limit=10)
+        scanned = self.rest("/v1/synapses", index=index)["synapses"][0]
+        self.assertEqual(scanned["co_fire_count"], edge["co_fire_count"])
+        for _ in range(4):
+            self.client.call("qubicdb_read", index_id=index, id=a["_id"])
+            self.client.call("qubicdb_read", index_id=index, id=b["_id"])
+        changed = self.rest("/v1/synapses", index=index)["synapses"][0]
+        self.assertGreater(changed["weight"], edge["weight"])
+        self.assertGreater(changed["co_fire_count"], edge["co_fire_count"])
+
+        def distance(graph):
+            nodes = {n["id"]: n["position"] for n in graph["nodes"]}
+            return math.sqrt(sum((x-y)**2 for x, y in zip(nodes[a["_id"]], nodes[b["_id"]])))
+
+        original_distance = distance(initial)
+        deadline = time.monotonic() + 2
+        while True:
+            current = distance(self.rest("/v1/graph", index=index))
+            if current < original_distance or time.monotonic() > deadline:
+                break
+            time.sleep(0.02)
+        self.assertLess(current, original_distance)
+
+    def test_rest_parent_position_is_distinct_from_metadata_and_tags(self):
+        index = self.index("parent")
+        parent = self.write(index, "Gateway protocol contract.")
+        child = self.rest("/v1/write", {"content": "Retention exception for archived transfer receipts.",
+                                        "parent_id": parent["_id"], "metadata": {"source": "contract.md"},
+                                        "tags": ["requested-tag"]}, index=index)
+        self.assertTrue(all(abs(a-b) <= 0.100001 for a,b in zip(parent["position"], child["position"])))
+        self.assertEqual(child["metadata"]["source"], "contract.md")
+        self.assertEqual(child["tags"], [])
+
+    def test_complete_data_export_beyond_recall_limits(self):
+        index = self.index("full-corpus")
+        for number in range(520):
+            self.rest("/v1/write", {"content": f"Archived manifest {number:04d} passed verification.",
+                                    "metadata": {"record_number": str(number)}}, index=index)
+            time.sleep(0.025)
+        self.assertEqual(self.client.call("qubicdb_recall", index_id=index, limit=1000)["count"], 500)
+        self.assertEqual(self.rest("/v1/recall?offset=400&limit=1000", index=index)["count"], 100)
+        repeated = self.rest("/v1/command", {"type": "find", "collection": "neurons",
+                                             "options": {"skip": 520, "limit": 2}}, index=index)
+        self.assertEqual(repeated["count"], 2)
+        source = Path(__file__).resolve().parents[1] / "plugins/qubicdb-skills/skills/qubic-search/scripts/read_all.py"
+        spec = importlib.util.spec_from_file_location("read_all", source)
+        helper = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(helper)
+        with tempfile.TemporaryDirectory(prefix="qubic-export-test-") as temporary:
+            output = Path(temporary) / "neurons.jsonl"
+            summary = helper.export_neurons(self.base, index, output)
+            rows = [json.loads(line) for line in output.read_text().splitlines()]
+            self.assertEqual(summary["unique_neurons"], 520)
+            self.assertEqual({int(n["metadata"]["record_number"]) for n in rows}, set(range(520)))
+            self.assertTrue(all(n["accessCount"] == 1 for n in rows))
+            with self.assertRaises(FileExistsError):
+                helper.export_neurons(self.base, index, output)
+        stats = self.rest("/v1/brain/stats", index=index)
+        self.assertEqual(stats["current_dimension"], 6)
 
 
 if __name__ == "__main__":

@@ -14,3 +14,5 @@ Search with a cue reflecting the actual question. Use `qubicdb_search` plus `str
 This release initializes VADER internally and can use query/memory sentiment to modify ranking. The ten MCP tools do not expose per-neuron sentiment labels or scores. Do not fabricate a numerical score, claim a label was returned, or describe sentiment ranking as an exact classifier. For a user-requested sentiment analysis, distinguish your analysis from measured server output and retain uncertainty, especially across languages.
 
 Automatic sentiment is a secondary retrieval signal. It is not evidence that an entry is true, a diagnostic assessment, or a substitute for reading the original feedback.
+
+Preserve event dates and distinguish repeated events from duplicate facts. Default energy decay is a ranking effect, not a TTL erasure policy; do not promise that old personal entries will disappear automatically.
